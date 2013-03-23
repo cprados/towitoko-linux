@@ -1,0 +1,228 @@
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Carlos Prados Bocos">    
+<meta http-equiv="Keywords" content="Towitoko, UNIX, Linux, Smartcard, Driver, CT-API, PC/SC, PCSC, Chipdrive">
+<meta name="Language" content="English">
+<meta name="Modified" content="2002-08-25 10:00:00"></head>
+<title>UNIX driver for Towitoko smartcard readers</title>
+</head>
+
+
+<body text="#000000" bgcolor="#ffffff" link="#0000ff" vlink="#800080" alink="#ff0000">
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%" summary="">
+<tbody>
+  <tr>
+  <td valign="top">
+  <table bgcolor="#bbddff" border="0" cellpadding="0" cellspacing="0" width="100%" summary="">
+  <tbody>
+  
+  <tr>
+   <td> </td>
+  <td>&nbsp;</td>
+  <td> </td>  
+  </tr>
+
+  <tr>
+  <td> </td>
+  <td align="center"  valign="center">
+  <img src="chipdrive-micro-01.jpg" alt=" [Image of a Chipdrive Micro] "> 
+  </td>
+  <td> </td>
+  </tr>
+  
+  <tr>
+   <td> </td>
+  <td>&nbsp;</td>
+  <td> </td>  
+  </tr>
+  
+  <tr>
+    <td> </td>
+    <td valign="top" width="200">
+    <!--<td valign="top" width="240">-->
+    <p><font face="Arial,Helvetica"><strong><a href="#Description">Description</a></strong><br>
+      <small>
+       <a href="#APIs">Smartcard API's provided</a><br>
+       <a href="#Readers">Supported readers</a><br>
+       <a href="#Interfaces">Supported interfaces</a><br>
+       <a href="#Smartcards">Supported smartcards</a><br>
+      </small>
+    </font></p>
+    <p><font face="Arial,Helvetica"><strong><a href="#Download">Download</a></strong><br>
+      <small>
+       <a href="#Source">Source packages</a><br>
+       <a href="#Debian">Debian packages</a><br>
+      </small>
+    </font></p>
+    <p><font face="Arial,Helvetica"><strong><a href="#Documentation">Documentation</a></strong><br>
+      <small>
+       <a href="#Design">Design</a><br>
+       <a href="#NEWS">NEWS</a><br>
+       <a href="#ChangeLog">ChangeLog</a><br>
+      </small>
+    </font></p>
+    <p><font face="Arial,Helvetica"><strong><a href="#Applications">Applications</a></strong><br>
+      <small>
+       <a href="#MUSCLE">MUSCLE</a><br>
+       <a href="#OpenSC">OpenSC</a><br>
+       <a href="#Libchipcard">Libchipcard</a><br>      
+       <a href="#Smartcard">Smartcard</a><br>
+       <a href="#GSmartcard">Gnome Smartcard</a><br>
+       <a href="#POC">Gnu POC</a><br>
+       <a href="#Medical">Medical card reader</a><br>
+      </small>
+    </font></p>
+    <p><font face="Arial,Helvetica"><strong><a href="#TODO">Todo list</a></strong><br></font></p>
+    </td>
+    <td> </td>
+  </tr>
+  
+  <tr>
+  <td> </td>
+  <td>&nbsp;</td>
+  <td> </td>
+  </tr>
+
+  </tbody>
+  </table>       
+  </td>
+ 
+  <td valign="top" cellpadding="100" cellspacing="100">
+
+<h1>UNIX Driver for Towitoko Smartcard Readers</h1>
+
+<a name="Description"><h2>Description</h2></a>
+
+<p>  
+This library provides a driver for using Towitoko smartcard readers under 
+UNIX environment.
+</p>
+
+<a name="APIs"><b>Smartcard API's provided:</b></a>
+
+<ul>
+<li>CT-API 1.1 and CT-BCS 0.9. See ctapi (3) and ctbcs (3) man pages 
+provided with this package.</li>
+<li>PCSC Lite. See 
+<a href="http://www.linuxnet.com">http://www.linuxnet.com</a> for download and 
+documentation.</li>
+</ul>
+
+<a name="Readers"><b>Supported readers:</b></a>
+<ul>
+<li>Towitoko Chipdrive Micro, Extern, Extern II, Intern, and Twin.</li>
+<li>The most recent readers labelled as "Kartenzwerg" use 
+the same protocol as Chipdrive, and should work with this driver, 
+although they have not been tested.</li>
+</ul>
+
+<a name="Interfaces"><b>Supported interfaces:</b></a>
+<ul>
+<li>Serial readers: Configure you serial port like for a modem. See 
+<a href="http://www.linuxdoc.org/HOWTO/Serial-HOWTO.html">
+http://www.linuxdoc.org/HOWTO/Serial-HOWTO.html</a></li>
+<li>USB readers: Linux kernel version 2.4.12 or greater with PL2303 USB 
+serial driver enabled is needed.
+See <a href="http://www.linux-usb.org/USB-guide/book1.html">
+http://www.linux-usb.org/USB-guide/book1.html</a>.
+<br>Note that PL2303 support is still in experimental stage!
+<br>Also note that pl2303.c drivers from kernel versions previous to 2.4.12 
+will surely not work with this driver and will probably hang your machine.</li>
+</ul>
+
+<a name="Smartcards"><b>Supported smartcards:</b></a>
+<ul>
+<li>Processor cards: direct and inverse convention cards, T=0 and T=1
+protocols. Short and extended case 1, 2, 3, 4 ISO 7816-3 APDU's. PPS and 
+baudrate selection from 9600 bps to 115200 bps.</li>
+<li>Memory cards: I2C, 2 wire and 3 wire bus protocol. Access to memory
+cards is provided via the Interindustry Commands described in the
+MCT v09 part 7 spec. See
+<a href="http://www.panstruga.de/ct-api/spec/spec_v09.html">
+http://www.panstruga.de/ct-api/spec/spec_v09.html</a></li>
+</ul>
+
+<hr>
+<a name="Download"><h2>Download</h2></a>
+
+<p>
+This software is provided under the terms of the 
+<a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a>.
+</p>
+
+<ul>
+<li><a name="Source">Source package: </a><a href="files/towitoko-2.0.7.tar.gz">towitoko-2.0.7.tar.gz</a></li>
+<li><a name="Debian">Debian packages: </a>
+<a href="http://packages.debian.org/libtowitoko2">runtime library</a> package and <a href="http://packages.debian.org/libtowitoko-dev">development</a> package
+are available via apt-get from any Debian mirror:
+<pre>
+# apt-get install libtowitoko2
+# apt-get install libtowitoko-dev	
+</pre></li>
+</ul>
+
+<hr>
+<a name="Documentation"><h2>Documentation</h2></a>
+<ul>
+<li><a name="Design"><a href="doc/design.html">Design:</a> </a>UNIX Towitoko Driver Design.
+<li><a name="NEWS"><a href="doc/NEWS">NEWS:</a> </a> List of user visible changes to the driver functionality.
+<li><a name="ChangeLog"><a href="doc/ChangeLog">ChangeLog:</a> </a> Hitorical listing of all changes made to the driver.
+</ul>
+
+<hr>
+<a name="Applications"><h2>Applications</h2></a>
+<p>
+Here is a (probably incomplete) list of applications that can be built on top of this driver:
+</p>
+
+<ul>
+<li><a name="MUSCLE"><a href="http://www.linuxnet.com">MUSCLE:</a> </a> 
+Movement for the Use of SmartCards under Linux Environment. This driver provides MUSCLE IFD Handler 2.0 interface. 
+It works with with MUSCLE PCSC Lite, Musclecard PKCS#11 framework, and
+applications built on top of PCSC Lite API.</li>
+<li><a name="OpenSC"><a href="http://www.opensc.org">OpenSC:</a> </a>
+Smartcard library and applications with support for PKCS #15 compatible cards.</li>
+<li><a name="Smartcard"><a href="http://home.kcore.de/~kianga/smartcard">Smartcard:</a> </a>
+A utility for controlling smart card readers under Linux. Handy for storing data in memory cards.</li>
+<li><a name="GSmartcard"><a href="http://home.kcore.de/~kiza/linux/gsmartcard">Gnome Smartcard:</a> </a>
+A Gnome/GTK graphical frontend for smartcard. Looks like the Towitoko smartcard explorer.</li>
+<li><a name="Libchipcard"><a href="http://www.libchipcard.de/">Libchipcard:</a> </a>
+A library for easy access to chip cards via chip card readers (terminals).</li>
+<li><a name="POC"><a href="http://www.gnu.org/software/poc/poc.html">Gnu POC:</a> </a>
+Gnu Password On Card is a program for managing passwords on smartcards.</li>
+<li><a name="Medical"><a href="http://smartcards.price-of-freedom.de/">German medical card reader:</a> </a>
+Reads data on a German health insurance card.</li>
+</ul>
+
+<hr>
+<a name="TODO"><h2>Todo list</h2></a>
+<ul>
+<li>Update to CT-BCS 1.0.</li>
+<li>Test inverse convention. Success has been reported with some inverse 
+convetion cards, while faliures have been reported with others.</li>
+<li>Test Chipdrive Twin and Kartenzwerg.</li>
+</ul>
+
+
+</td>
+</tr>
+</tbody></table>
+<hr noshade="" width="100%" size="1">
+
+<a href="key.txt">
+<em>Carlos Prados (GPG key)</em>
+</a>
+<br>
+
+<hr noshade="" width="100%" size="1">
+
+This page was last updated: <b>April 4th, 2003</b>
+<P>
+You are the visitor number 1 since July 7th 2000.
+</p>
+<hr noshade="" width="100%" size="1">
+
+</body>
+</html>
