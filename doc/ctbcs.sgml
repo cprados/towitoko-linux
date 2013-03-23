@@ -1,0 +1,1062 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.1//EN">
+
+<refentry>
+ 
+<refentryinfo>
+        <address><email>cprados@yahoo.com</email></address>
+        <author>
+        <firstname>Carlos</firstname>
+        <surname>Prados</surname>
+        </author>
+        <copyright><year>2001</year><holder>Carlos Prados</holder></copyright>
+        <date>06-03-2001</date>
+</refentryinfo>
+ 
+<refmeta>
+        <refentrytitle>CT-BCS</refentrytitle>
+        <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+        <refname>CT-BCS</refname>
+        <refpurpose>
+	Cardterminal basic command set for integrated circuit card 
+	applications.
+	</refpurpose>
+</refnamediv>
+
+<refsect1>
+
+	<title>DESCRIPTION</title>
+	<para>
+	This manpage describes the subset of the Cardterminal Basic Command Set
+	(CT-BCS) used to control cardterminals with one or more integrated 
+	circuit card slots, without key pad and display. This manpage is not a 
+	complete specification of the CT-BCS, but a general overview of the 
+	most common functionalities.
+	</para> 
+
+	<para>
+	The CT-BCS commands are constructed in compliance with 
+	<productname>ISO/IEC 7816-4</productname> interindustry commands and 
+	are used to control cardterminal utilizing the CT-API function 
+	<function>CT_data()</function>.
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>COMMAND STRUCTURE</title>
+	
+	<para>
+	A CT-BCS command is an array of bytes that is sent to the cardterminal 
+	to perform an administrative action. The CT-BCS response is an array
+	of bytes returned by the cardterminal that informs of the completion 
+	status of the action requested.
+	</para>
+
+	<para>
+	The following diagram shows the general structure of a CT-BCS command:
+	</para>
+
+	<programlisting width="46">
+|<------------------------------------------>|
+|    Header (4 Bytes)     and body           |
+|      (mandatory)       (optional)          |
+|<----------------->|<---------------------->|
+|___________________|________________________|
+|CLA |INS |P1  |P2  |Lc  |Data          |Le  |
+|____|____|____|____|____|______________|____|
+	</programlisting>
+
+	<para>
+	The following diagram shows the general structure of a CT-BCS 
+	response:
+	</para>
+
+	<programlisting width="46">
+|<------------------------------>|<--------->|
+|           Body                    Trailer  |
+|        (optional)                (2 Bytes) |
+|                                 (mandatory)|
+|________________________________|___________|
+|Data                            |SW1-SW2    |
+|________________________________|___________|
+	</programlisting>
+
+	<para>
+	The fields within a CT-BCS command and response are equivalent to those 
+	defined by ISO/IEC 7816-4:
+	</para>
+
+	<variablelist>
+
+		<varlistentry>
+		<term>CLA</term>
+		<listitem>
+		<para>
+		Class. The CLA value used for CT-BCS commands is 0x20.
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>INS</term>
+		<listitem>
+		<para>
+		Instruction. Defines the action to be performed by the
+		cardterminal.
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P1, P2</term>
+		<listitem>
+		<para>
+		Command parameters 1 and 2.
+		</para>
+		</listitem>
+		</varlistentry>
+	
+		<varlistentry>
+		<term>Lc</term>
+		<listitem>
+		<para>
+		Length of command data field.
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Le</term>
+		<listitem>
+		<para>
+		Length of expected data:
+		</para>
+		<para>
+		Case 1: No command data, no response data (no Lc and no Le).
+		</para>
+		<para>
+		Case 2: Command data, no response data (0<=Lc<=254 and no Le).
+		</para>
+		<para>
+		Case 3: No command data, response data (no Lc and 0<=Le<=254).
+		</para>
+		<para>
+		Case 4: Command data, response data (0<=Lc<=254 and 0<=Le<=254)
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>SW1, SW2</term>
+		<listitem>
+		<para>
+		Status bytes. Completion status of the command.
+		</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+
+	<para>
+	The address value 0x01 (CT) shall be used as destination 
+	address (dad) given to <function>CT_data()</function> when sending 
+	CT-BCS commands (See CT_data (3)). 
+	</para>
+
+	<para>
+	The following commands are present in every CT-BCS implementation:
+	</para>
+
+	<table frame="all" colsep="1">
+		<title>Basic CT commands</title>
+		
+		<tgroup cols="2">
+		<colspec align="left">
+		<colspec align="right">
+
+		<thead>
+			<row>
+			<entry>Cardterminal Command</entry>
+			<entry>INS Code</entry>
+			</row>
+		</thead>
+
+		<tbody>
+			<row>
+			<entry>RESET CT</entry>
+			<entry>0x11</entry>
+			</row>
+
+			<row>
+			<entry>REQUEST ICC</entry>
+			<entry>0x12</entry>
+			</row>
+
+			<row>
+			<entry>GET STATUS</entry>
+			<entry>0x13</entry>
+			</row>
+
+			<row>
+			<entry>EJECT ICC</entry>
+			<entry>0x15</entry>
+			</row>
+		</tbody>
+
+		</tgroup>
+	</table>
+
+	<para>
+	The following general return codes SW1-SW2 may occur:
+	</para>
+ 
+	<table frame="all" colsep ="1">
+		<title>General return codes</title>
+		
+		<tgroup COLS="2">
+		<colspec align="right">
+		<colspec align="left">
+
+		<thead>
+			<row>
+			<entry>SW1-SW2</entry>
+			<entry>Description</entry>
+			</row>
+		</thead>
+		<tbody>
+			<row>
+			<entry>0x6700</entry>
+			<entry>Wrong length</entry>
+			</row>
+
+			<row>
+			<entry>0x6900</entry>
+			<entry>Command not allowed</entry>
+			</row>
+
+			<row>
+			<entry>0x6A00</entry>
+			<entry>Wrong parameters P1, P2</entry>
+			</row>
+
+			<row>
+			<entry>0x6D00</entry>
+			<entry>Wrong instruction</entry>
+			</row>
+
+			<row>
+			<entry>0x6E00</entry>
+			<entry>Class not supported</entry>
+			</row>
+		</tbody>
+		</tgroup>
+	</table>
+
+</refsect1>
+
+<refsect1>
+	<title>FUNCTIONAL UNITS</title>
+
+	<para>
+	Functional units are entities that can be addressed as target of 
+	CT-BCS commands. In some CT-BCS commands a target functional unit 
+	needs to be specified.
+	</para>
+ 
+	<table frame="all" colsep="1">
+		<title>Functional units</title>
+		
+		<tgroup COLS="2">
+		<colspec align="left">
+		<colspec align="right">
+
+		<thead>
+			<row>
+			<entry>Functional Unit</entry>
+			<entry>Coding</entry>
+			</row>
+		</thead>
+
+		<tbody>
+			<row>
+			<entry>CT kernel</entry>
+			<entry>0x00</entry>
+			</row>
+
+			<row>
+			<entry>CT/ICC slot 1</entry>
+			<entry>0x01</entry>
+			</row>
+
+			<row>
+			<entry>CT/ICC slot 2</entry>
+			<entry>0x02</entry>
+			</row>
+
+			<row>
+			<entry>\.\.\.</entry>
+			<entry>\.\.\.</entry>
+			</row>
+
+			<row>
+			<entry>CT/ICC slot 14</entry>
+			<entry>0x0E</entry>
+			</row>
+
+		</tbody>
+
+		</tgroup>
+	</table>
+
+	<para>
+	Support for slots 2-14 depends on the cardterminal. Functional units 
+	for keypad and display are defined for some cardterminals but are
+	not described here.
+	</para>
+
+</refsect1>
+
+<refsect1>
+	<title>COMMANDS DESCRIPTION</title>
+
+	<refsect2>
+
+	<title>RESET CT</title>
+
+	<para>
+	The RESET CT command asks the cardterminal to perform a reset of the 
+	specified functional unit. If the functional unit is the CT kernel, a 
+	software reset is carried out, meaning that all status information 
+	(f.i. information of inserted cards) is cleared and gathered again. 
+	For ICC functional units, an card reset is performed.
+	</para>
+
+	<para>
+	Optionally the answer to reset of the functional unit is returned
+	in the response data.
+	</para>
+
+	<para>
+	A RESET CT command can be issued after initialization of the 
+	cardterminal or after the occurrence of a communication error.
+	</para>
+	
+	<para>
+	The command structure is as follows:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>CLA</term>
+		<listitem>
+		<para>0x20</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>INS</term>
+		<listitem>
+		<para>0x11 (=RESET CT)</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P1</term>
+		<listitem>
+		<para>Functional unit:</para>
+		<para>0x00 = CT</para>
+		<para>0x01 - 0x0E = ICC Interface 1-14</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P2</term>
+		<listitem>
+		<para>Command qualifier:</para>
+		<para>In case P1 = 0x00:</para>
+		<para>0x00 = No response</para>
+		<para>In case P1 = 0x01 - 0x0E:</para>
+		<para>0x00 = No response data</para>
+		<para>0x01 = Return complete ATR</para>
+		<para>0x02 = Return Historical Bytes</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Lc field</term>
+		<listitem>
+		<para>Empty</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Le field</term>
+		<listitem>
+		<para>
+		Empty or 0x00: return full length of requested information
+		</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+
+	<para>
+	The response structure is as follows:
+	</para>
+	
+	<variablelist>
+		<varlistentry>
+		<term>Data</term>
+		<listitem>
+		<para>Empty, ATR or Historical Bytes</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>SW1-SW2</term>
+		<listitem>
+		<para>Status Bytes</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	When functional unit is CT (0x00) the following status bytes can be
+	returned:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>0x9000</term>
+		<listitem>
+		<para>Reset successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6400</term>
+		<listitem>
+		<para>Reset not successful</para>
+		</listitem>
+		</varlistentry>
+
+	</variablelist>
+
+	<para>
+	When functional unit is a ICC slot (0x01 - 0x0E) the following status 
+	bytes can be returned:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>0x9000</term>
+		<listitem>
+		<para>Synchronous ICC, reset successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x9001</term>
+		<listitem>
+		<para>Asynchronous ICC, reset successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6400</term>
+		<listitem>
+		<para>Reset not successful</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	</refsect2>
+
+	<refsect2>
+		
+	<title>REQUEST ICC</title>
+	
+	<para>
+	The REQUEST ICC command asks the cardterminal to wait for the presence 
+	of an ICC on the specified cardterminal slot during a specified time 
+	limit. The command synchronously blocks the caller application unless
+	time limit 0 is specified. When an ICC is presented it is automatically
+	activated and reset.
+	</para>
+ 
+	<para>
+	The command structure is as follows:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>CLA</term>
+		<listitem>
+		<para>0x20</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>INS</term>
+		<listitem>
+		<para>0x12 (=REQUEST ICC)</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P1</term>
+		<listitem>
+		<para>Functional unit:</para>
+		<para>0x01 - 0x0E = ICC-Interface 1 - 14</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P2</term>
+		<listitem>
+		<para>
+		Command qualifier: Request handling instructions for the CT
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Lc field</term>
+		<listitem>
+		<para>Empty or length of subsequent data field</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Data field</term>
+		<listitem>
+		<para>
+		Empty (= immediate response required) or max. waiting
+		time in seconds (1 byte, binary coding) for presenting the ICC
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Le field</term>
+		<listitem>
+		<para>
+		Empty or 0x00 =  Return full length of requested information
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The parameter P2 carries the request handling instructions for the 
+	CT. The value of P2 is constructed of two 4-bits subfields:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>Bits b8-b5</term>
+		<listitem>
+		<itemizedlist>
+			<listitem>
+			<para>0x0 = No meaning</para>
+			</listitem>
+
+			<listitem>
+			<para>Other values reserved for future use</para>
+			</listitem>
+		</itemizedlist>
+		</listitem> 
+		</varlistentry>
+
+		<varlistentry>
+		<term>Bits b4-b1</term>
+		<listitem>
+		<itemizedlist>
+			<listitem>
+			<para>0x0 = No response data</para>
+			</listitem>
+
+			<listitem>
+			<para>0x1 = Return complete ATR</para>
+			</listitem>
+
+			<listitem>
+			<para>0x2 = Return Historical Bytes</para>
+			</listitem>
+		</itemizedlist>
+		</listitem> 
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The response structure is as follows:
+	</para>
+	
+	<variablelist>
+		<varlistentry>
+		<term>Data</term>
+		<listitem>
+		<para>Empty, ATR or Historical Bytes</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>SW1-SW2</term>
+		<listitem>
+		<para>Status Bytes</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The following status bytes can be returned:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>0x9000</term>
+		<listitem>
+		<para>Synchronous ICC presented, reset successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x9001</term>
+		<listitem>
+		<para>Asynchronous ICC, reset successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6200</term>
+		<listitem>
+		<para>No card presented within specified time</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6201</term>
+		<listitem>
+		<para>Card already present and activated</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6400</term>
+		<listitem>
+		<para>Reset not successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6900</term>
+		<listitem>
+		<para>Command with timer not supported</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	</refsect2>
+
+	<refsect2>
+		
+	<title>GET STATUS</title>
+	
+	<para>
+	The GET STATUS command is used to gather cardterminal manufacturer 
+	information and ICC status information from the cardterminal.
+	The information is represented by TLV (tag, length, value) encoded 
+	data objects. The tag of the data object to be retrieved is specified
+	in the command and the value is returned in the response.
+	</para>
+	
+	<para>
+	The command structure is as follows:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>CLA</term>
+		<listitem>
+		<para>0x20</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>INS</term>
+		<listitem>
+		<para>0x13 (=GET STATUS)</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P1</term>
+		<listitem>
+		<para>Functional unit:</para>
+		<para>0x00 = CT</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P2</term>
+		<listitem>
+		<para>
+		Command qualifier: Tag of data object to be returned
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Lc field</term>
+		<listitem>
+		<para>Empty</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Data field</term>
+		<listitem>
+		<para>Empty</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Le field</term>
+		<listitem>
+		<para>
+		0x00 =  Return full length of requested information
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The response structure is as follows:
+	</para>
+	
+	<variablelist>
+		<varlistentry>
+		<term>Data</term>
+		<listitem>
+		<para>
+		Status information (only value field of data object)
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>SW1-SW2</term>
+		<listitem>
+		<para>Status Bytes</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The following data objects are defined. Note that only value field
+	is returned in the response:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>Cardterminal manufacturer data object</term>
+		<listitem>
+		<itemizedlist>
+			<listitem>
+			<para>Tag = 0x46</para>
+			</listitem>
+
+			<listitem>
+			<para>Length &gt;= 15</para>
+			</listitem>
+
+			<listitem>
+			<para>Value:</para>
+
+			<para>CTM: Cardterminal manufacturer (5 bytes
+			ASCII encoded). It consists of 2 bytes with the
+			country code and 3 bytes with the manufacturer 
+			acronym</para>
+
+			<para>CTT: Cardterminal type (5 bytes ASCII encoded).
+			The value is manufacturer dependant</para>
+			
+			<para>CTSV: Cardterminal software version (5 bytes
+			ASCII encoded). The value is manufacturer dependant
+			</para>
+			
+			<para>DD: Discretionary data (any number of bytes 
+			including 0)
+			</para>
+			</listitem>
+		</itemizedlist>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>ICC status data object</term>
+		<listitem>
+		<itemizedlist>
+			<listitem>
+			<para>Tag = 0x80</para>
+			</listitem>
+
+			<listitem>
+			<para>Length</para>
+			</listitem>
+			
+			<listitem>
+			<para>Value: One ICC status byte per ICC slot in the 
+			cardterminal. 
+			</para>
+			
+			<para>
+			If b8-b1 = 0x00 then no ICC is present in the slot. 
+			</para>
+			
+			<para>
+			If b1 = 1 and ICC is present in the slot and the bytes 
+			b3-b2 indicate whether the ICC is electrically 
+			connected (value 10) or electrically disconnected 
+			(value 01).
+			</para>
+		
+			</listitem>
+		</itemizedlist>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The following status bytes can be returned:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>0x9000</term>
+		<listitem>
+		<para>Command successful</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	</refsect2>
+
+	<refsect2>
+		
+	<title>EJECT ICC</title>
+	
+	<para>
+	The EJECT ICC command asks the cardterminal to deactivate the ICC. It
+	must be used at the end of the communication with the card or when a
+	irreparable communication error occur.
+	</para>
+	
+	<para>
+	The command structure is as follows:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>CLA</term>
+		<listitem>
+		<para>0x20</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>INS</term>
+		<listitem>
+		<para>0x15 (=EJECT ICC)</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P1</term>
+		<listitem>
+		<para>Functional unit:</para>
+		<para>0x01 - 0x0E = ICC-Interface 1-14</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>P2</term>
+		<listitem>
+		<para>
+		Command qualifier: Eject handling instructions for the CT 
+		(0x00 for cardterminals without keypad and display)
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Lc field</term>
+		<listitem>
+		<para>Empty or length of subsequent data field</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Data field</term>
+		<listitem>
+		<para>Empty or time in seconds for removing the ICC</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>Le field</term>
+		<listitem>
+		<para>
+		Empty
+		</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The response structure is as follows:
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>Data</term>
+		<listitem>
+		<para>
+		Empty
+		</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>SW1-SW2</term>
+		<listitem>
+		<para>Status Bytes</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	<para>
+	The following status bytes can be returned
+	</para>
+
+	<variablelist>
+		<varlistentry>
+		<term>0x9000</term>
+		<listitem>
+		<para>Command successful</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x9001</term>
+		<listitem>
+		<para>Command successful, card removed</para>
+		</listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>0x6200</term>
+		<listitem>
+		<para>Card not removed within specified time</para>
+		</listitem>
+		</varlistentry>
+	</variablelist>
+
+	</refsect2>
+
+</refsect1>
+
+<refsect1>
+ 
+        <title>SEE ALSO</title>
+        <para>ctapi (3).</para>
+ 
+        <para>
+	The <productname>MKT</productname> (Multifunktionale KartenTerminals)
+        specifications, available for download from <acronym>Teletrust</acronym>
+        web site 
+	<ulink url="http://www.teletrust.de">http://www.teletrust.de</ulink>.
+        In special the documents:</para>
+ 
+        <variablelist>
+ 
+        <varlistentry>
+        <term>Part 3:</term>
+        <listitem>
+        <para>CT-API. Cardterminal Applications Programming Interface.
+        </para>
+        </listitem>
+        </varlistentry>
+ 
+        <varlistentry>
+        <term>Part 4:</term>
+        <listitem>
+        <para>CT-BCS. Cardterminal Basic Command Set.
+        </para>
+        </listitem>
+        </varlistentry>
+ 
+        <varlistentry>
+        <term>Part 7:</term>
+        <listitem>
+        <para>
+	IC cards with synchronous transmission Part3: Usage of interindustry 
+	Commands.
+        </para>
+        </listitem>
+        </varlistentry>
+ 
+        </variablelist>
+
+        <para>
+        ISO/IEC 7816: <productname>Identification cards - Integrated circuit(s)
+        cards with contacts</productname>:
+        </para>
+ 
+        <variablelist>
+ 
+        <varlistentry>
+        <term>Part 4:</term>
+        <listitem>
+        <para>
+        Interindustry commands for interchange.
+        </para>
+        </listitem>
+        </varlistentry>
+ 
+        </variablelist>
+
+</refsect1>
+
+<refsect1>
+ 
+        <title>AUTHOR</title>
+ 
+        <para>
+        This manual page was written by Carlos Prados 
+	<email>&lt;cprados@yahoo.com&gt;</email>.
+        </para>
+ 
+</refsect1>
+
+</refentry>
+ 
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-default-dtd-file:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

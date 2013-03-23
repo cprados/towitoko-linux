@@ -1,0 +1,520 @@
+.\" This -*- nroff -*- file has been generated from
+.\" DocBook SGML with docbook-to-man on Debian GNU/Linux.
+...\"
+...\"	transcript compatibility for postscript use.
+...\"
+...\"	synopsis:  .P! <file.ps>
+...\"
+.de P!
+\\&.
+.fl			\" force out current output buffer
+\\!%PB
+\\!/showpage{}def
+...\" the following is from Ken Flowers -- it prevents dictionary overflows
+\\!/tempdict 200 dict def tempdict begin
+.fl			\" prolog
+.sy cat \\$1\" bring in postscript file
+...\" the following line matches the tempdict above
+\\!end % tempdict %
+\\!PE
+\\!.
+.sp \\$2u	\" move below the image
+..
+.de pF
+.ie     \\*(f1 .ds f1 \\n(.f
+.el .ie \\*(f2 .ds f2 \\n(.f
+.el .ie \\*(f3 .ds f3 \\n(.f
+.el .ie \\*(f4 .ds f4 \\n(.f
+.el .tm ? font overflow
+.ft \\$1
+..
+.de fP
+.ie     !\\*(f4 \{\
+.	ft \\*(f4
+.	ds f4\"
+'	br \}
+.el .ie !\\*(f3 \{\
+.	ft \\*(f3
+.	ds f3\"
+'	br \}
+.el .ie !\\*(f2 \{\
+.	ft \\*(f2
+.	ds f2\"
+'	br \}
+.el .ie !\\*(f1 \{\
+.	ft \\*(f1
+.	ds f1\"
+'	br \}
+.el .tm ? font underflow
+..
+.ds f1\"
+.ds f2\"
+.ds f3\"
+.ds f4\"
+'\" t 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n  
+.TH "CT-BCS" "3" 
+.SH "NAME" 
+CT-BCS \(em 	Cardterminal basic command set for integrated circuit card  
+applications. 
+ 
+.SH "DESCRIPTION" 
+.PP 
+This manpage describes the subset of the Cardterminal Basic Command Set 
+(CT-BCS) used to control cardterminals with one or more integrated  
+circuit card slots, without key pad and display. This manpage is not a  
+complete specification of the CT-BCS, but a general overview of the  
+most common functionalities. 
+ 
+.PP 
+The CT-BCS commands are constructed in compliance with  
+\fBISO/IEC 7816-4\fP interindustry commands and  
+are used to control cardterminal utilizing the CT-API function  
+\fBCT_data()\fP. 
+ 
+.SH "COMMAND STRUCTURE" 
+.PP 
+A CT-BCS command is an array of bytes that is sent to the cardterminal  
+to perform an administrative action. The CT-BCS response is an array 
+of bytes returned by the cardterminal that informs of the completion  
+status of the action requested. 
+ 
+.PP 
+The following diagram shows the general structure of a CT-BCS command: 
+ 
+.PP 
+.nf 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
+\f(CW|<------------------------------------------>| 
+|    Header (4 Bytes)     and body           | 
+|      (mandatory)       (optional)          | 
+|<----------------->|<---------------------->| 
+|___________________|________________________| 
+|CLA |INS |P1  |P2  |Lc  |Data          |Le  | 
+|____|____|____|____|____|______________|____| 
+\fR 
+.fi 
+.PP 
+.PP 
+The following diagram shows the general structure of a CT-BCS  
+response: 
+ 
+.PP 
+.nf 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
+\f(CW|<------------------------------>|<--------->| 
+|           Body                    Trailer  | 
+|        (optional)                (2 Bytes) | 
+|                                 (mandatory)| 
+|________________________________|___________| 
+|Data                            |SW1-SW2    | 
+|________________________________|___________| 
+\fR 
+.fi 
+.PP 
+.PP 
+The fields within a CT-BCS command and response are equivalent to those  
+defined by ISO/IEC 7816-4: 
+ 
+.IP "CLA" 10 
+Class. The CLA value used for CT-BCS commands is 0x20. 
+ 
+.IP "INS" 10 
+Instruction. Defines the action to be performed by the 
+cardterminal. 
+ 
+.IP "P1, P2" 10 
+Command parameters 1 and 2. 
+ 
+.IP "Lc" 10 
+Length of command data field. 
+ 
+.IP "Le" 10 
+Length of expected data: 
+ 
+.IP "" 10 
+Case 1: No command data, no response data (no Lc and no Le). 
+ 
+.IP "" 10 
+Case 2: Command data, no response data (0<=Lc<=254 and no Le). 
+ 
+.IP "" 10 
+Case 3: No command data, response data (no Lc and 0<=Le<=254). 
+ 
+.IP "" 10 
+Case 4: Command data, response data (0<=Lc<=254 and 0<=Le<=254) 
+ 
+.IP "SW1, SW2" 10 
+Status bytes. Completion status of the command. 
+ 
+.PP 
+The address value 0x01 (CT) shall be used as destination  
+address (dad) given to \fBCT_data()\fP when sending  
+CT-BCS commands (See CT_data (3)).  
+ 
+.PP 
+The following commands are present in every CT-BCS implementation: 
+ 
+.PP 
+\fBBasic CT commands\fR  
+.TS 
+tab() box; 
+l| r|. 
+Cardterminal CommandINS Code 
+RESET CT0x11 
+REQUEST ICC0x12 
+GET STATUS0x13 
+EJECT ICC0x15 
+.TE 
+.PP 
+The following general return codes SW1-SW2 may occur: 
+ 
+.PP 
+\fBGeneral return codes\fR  
+.TS 
+tab() box; 
+r| l|. 
+SW1-SW2Description 
+0x6700Wrong length 
+0x6900Command not allowed 
+0x6A00Wrong parameters P1, P2 
+0x6D00Wrong instruction 
+0x6E00Class not supported 
+.TE 
+.SH "FUNCTIONAL UNITS" 
+.PP 
+Functional units are entities that can be addressed as target of  
+CT-BCS commands. In some CT-BCS commands a target functional unit  
+needs to be specified. 
+ 
+.PP 
+\fBFunctional units\fR  
+.TS 
+tab() box; 
+l| r|. 
+Functional UnitCoding 
+CT kernel0x00 
+CT/ICC slot 10x01 
+CT/ICC slot 20x02 
+\.\.\.\.\.\. 
+CT/ICC slot 140x0E 
+.TE 
+.PP 
+Support for slots 2-14 depends on the cardterminal. Functional units  
+for keypad and display are defined for some cardterminals but are 
+not described here. 
+ 
+.SH "COMMANDS DESCRIPTION" 
+.SS "RESET CT" 
+.PP 
+The RESET CT command asks the cardterminal to perform a reset of the  
+specified functional unit. If the functional unit is the CT kernel, a  
+software reset is carried out, meaning that all status information  
+(f.i. information of inserted cards) is cleared and gathered again.  
+For ICC functional units, an card reset is performed. 
+ 
+.PP 
+Optionally the answer to reset of the functional unit is returned 
+in the response data. 
+ 
+.PP 
+A RESET CT command can be issued after initialization of the  
+cardterminal or after the occurrence of a communication error. 
+ 
+.PP 
+The command structure is as follows: 
+ 
+.IP "CLA" 10 
+0x20 
+.IP "INS" 10 
+0x11 (=RESET CT) 
+.IP "P1" 10 
+Functional unit: 
+.IP "" 10 
+0x00 = CT 
+.IP "" 10 
+0x01 - 0x0E = ICC Interface 1-14 
+.IP "P2" 10 
+Command qualifier: 
+.IP "" 10 
+In case P1 = 0x00: 
+.IP "" 10 
+0x00 = No response 
+.IP "" 10 
+In case P1 = 0x01 - 0x0E: 
+.IP "" 10 
+0x00 = No response data 
+.IP "" 10 
+0x01 = Return complete ATR 
+.IP "" 10 
+0x02 = Return Historical Bytes 
+.IP "Lc field" 10 
+Empty 
+.IP "Le field" 10 
+Empty or 0x00: return full length of requested information 
+ 
+.PP 
+The response structure is as follows: 
+ 
+.IP "Data" 10 
+Empty, ATR or Historical Bytes 
+.IP "SW1-SW2" 10 
+Status Bytes 
+.PP 
+When functional unit is CT (0x00) the following status bytes can be 
+returned: 
+ 
+.IP "0x9000" 10 
+Reset successful 
+.IP "0x6400" 10 
+Reset not successful 
+.PP 
+When functional unit is a ICC slot (0x01 - 0x0E) the following status  
+bytes can be returned: 
+ 
+.IP "0x9000" 10 
+Synchronous ICC, reset successful 
+.IP "0x9001" 10 
+Asynchronous ICC, reset successful 
+.IP "0x6400" 10 
+Reset not successful 
+.SS "REQUEST ICC" 
+.PP 
+The REQUEST ICC command asks the cardterminal to wait for the presence  
+of an ICC on the specified cardterminal slot during a specified time  
+limit. The command synchronously blocks the caller application unless 
+time limit 0 is specified. When an ICC is presented it is automatically 
+activated and reset. 
+ 
+.PP 
+The command structure is as follows: 
+ 
+.IP "CLA" 10 
+0x20 
+.IP "INS" 10 
+0x12 (=REQUEST ICC) 
+.IP "P1" 10 
+Functional unit: 
+.IP "" 10 
+0x01 - 0x0E = ICC-Interface 1 - 14 
+.IP "P2" 10 
+Command qualifier: Request handling instructions for the CT 
+ 
+.IP "Lc field" 10 
+Empty or length of subsequent data field 
+.IP "Data field" 10 
+Empty (= immediate response required) or max. waiting 
+time in seconds (1 byte, binary coding) for presenting the ICC 
+ 
+.IP "Le field" 10 
+Empty or 0x00 =  Return full length of requested information 
+ 
+.PP 
+The parameter P2 carries the request handling instructions for the  
+CT. The value of P2 is constructed of two 4-bits subfields: 
+ 
+.IP "Bits b8-b5" 10 
+.RS 
+.IP "   \(bu" 6 
+0x0 = No meaning 
+.IP "   \(bu" 6 
+Other values reserved for future use 
+.RE 
+.IP "Bits b4-b1" 10 
+.RS 
+.IP "   \(bu" 6 
+0x0 = No response data 
+.IP "   \(bu" 6 
+0x1 = Return complete ATR 
+.IP "   \(bu" 6 
+0x2 = Return Historical Bytes 
+.RE 
+.PP 
+The response structure is as follows: 
+ 
+.IP "Data" 10 
+Empty, ATR or Historical Bytes 
+.IP "SW1-SW2" 10 
+Status Bytes 
+.PP 
+The following status bytes can be returned: 
+ 
+.IP "0x9000" 10 
+Synchronous ICC presented, reset successful 
+.IP "0x9001" 10 
+Asynchronous ICC, reset successful 
+.IP "0x6200" 10 
+No card presented within specified time 
+.IP "0x6201" 10 
+Card already present and activated 
+.IP "0x6400" 10 
+Reset not successful 
+.IP "0x6900" 10 
+Command with timer not supported 
+.SS "GET STATUS" 
+.PP 
+The GET STATUS command is used to gather cardterminal manufacturer  
+information and ICC status information from the cardterminal. 
+The information is represented by TLV (tag, length, value) encoded  
+data objects. The tag of the data object to be retrieved is specified 
+in the command and the value is returned in the response. 
+ 
+.PP 
+The command structure is as follows: 
+ 
+.IP "CLA" 10 
+0x20 
+.IP "INS" 10 
+0x13 (=GET STATUS) 
+.IP "P1" 10 
+Functional unit: 
+.IP "" 10 
+0x00 = CT 
+.IP "P2" 10 
+Command qualifier: Tag of data object to be returned 
+ 
+.IP "Lc field" 10 
+Empty 
+.IP "Data field" 10 
+Empty 
+.IP "Le field" 10 
+Hx00 =  Return full length of requested information 
+ 
+.PP 
+The response structure is as follows: 
+ 
+.IP "Data" 10 
+Status information (only value field of data object) 
+ 
+.IP "SW1-SW2" 10 
+Status Bytes 
+.PP 
+The following data objects are defined. Note that only value field 
+is returned in the response: 
+ 
+.IP "Cardterminal manufacturer data object" 10 
+.RS 
+.IP "   \(bu" 6 
+Tag = 0x46 
+.IP "   \(bu" 6 
+Length >= 15 
+.IP "   \(bu" 6 
+Value: 
+.IP "" 10 
+CTM: Cardterminal manufacturer (5 bytes 
+ASCII encoded). It consists of 2 bytes with the 
+country code and 3 bytes with the manufacturer  
+acronym 
+.IP "" 10 
+CTT: Cardterminal type (5 bytes ASCII encoded). 
+The value is manufacturer dependant 
+.IP "" 10 
+CTSV: Cardterminal software version (5 bytes 
+ASCII encoded). The value is manufacturer dependant 
+ 
+.IP "" 10 
+DD: Discretionary data (any number of bytes  
+including 0) 
+ 
+.RE 
+.IP "ICC status data object" 10 
+.RS 
+.IP "   \(bu" 6 
+Tag = 0x80 
+.IP "   \(bu" 6 
+Length 
+.IP "   \(bu" 6 
+Value: One ICC status byte per ICC slot in the  
+cardterminal.  
+ 
+.IP "" 10 
+If b8-b1 = 0x00 then no ICC is present in the slot.  
+ 
+.IP "" 10 
+If b1 = 1 and ICC is present in the slot and the bytes  
+b3-b2 indicate whether the ICC is electrically  
+connected (value 10) or electrically disconnected  
+(value 01). 
+ 
+.RE 
+.PP 
+The following status bytes can be returned: 
+ 
+.IP "0x9000" 10 
+Command successful 
+.SS "EJECT ICC" 
+.PP 
+The EJECT ICC command asks the cardterminal to deactivate the ICC. It 
+must be used at the end of the communication with the card or when a 
+irreparable communication error occur. 
+ 
+.PP 
+The command structure is as follows: 
+ 
+.IP "CLA" 10 
+0x20 
+.IP "INS" 10 
+0x15 (=EJECT ICC) 
+.IP "P1" 10 
+Functional unit: 
+.IP "" 10 
+0x01 - 0x0E = ICC-Interface 1-14 
+.IP "P2" 10 
+Command qualifier: Eject handling instructions for the CT  
+(0x00 for cardterminals without keypad and display) 
+ 
+.IP "Lc field" 10 
+Empty or length of subsequent data field 
+.IP "Data field" 10 
+Empty or time in seconds for removing the ICC 
+.IP "Le field" 10 
+Empty 
+ 
+.PP 
+The response structure is as follows: 
+ 
+.IP "Data" 10 
+Empty 
+ 
+.IP "SW1-SW2" 10 
+Status Bytes 
+.PP 
+The following status bytes can be returned 
+ 
+.IP "0x9000" 10 
+Command successful 
+.IP "0x9001" 10 
+Command successful, card removed 
+.IP "0x6200" 10 
+Card not removed within specified time 
+.SH "SEE ALSO" 
+.PP 
+ctapi (3). 
+.PP 
+The \fBMKT\fP (Multifunktionale KartenTerminals) 
+specifications, available for download from Teletrust         web site  
+\fIhttp://www.teletrust.de (link to URL http://www.teletrust.de) \fR. 
+In special the documents: 
+.IP "Part 3:" 10 
+CT-API. Cardterminal Applications Programming Interface. 
+ 
+.IP "Part 4:" 10 
+CT-BCS. Cardterminal Basic Command Set. 
+ 
+.IP "Part 7:" 10 
+IC cards with synchronous transmission Part3: Usage of interindustry  
+Commands. 
+ 
+.PP 
+ISO/IEC 7816: \fBIdentification cards - Integrated circuit(s) 
+cards with contacts\fP: 
+ 
+.IP "Part 4:" 10 
+Interindustry commands for interchange. 
+ 
+.SH "AUTHOR" 
+.PP 
+This manual page was written by Carlos Prados  
+<cprados@yahoo.com>. 
+ 
+...\" created by instant / docbook-to-man, Wed 27 Jun 2001, 21:32 

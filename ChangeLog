@@ -1,0 +1,181 @@
+2002-08-18  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.7
+	* Applied patch by Antti Tapaninen that contains some portability 
+	  fixes, fixes compiler warnings and errors for some C/C++ compiler 
+	  and also adds support for AIX and NetBSD.
+	* Fixed support for writing to long I2C cards. Thanks Martin Preuss.
+	* Cleaned IO_Serial_SetProperties() code. Hopefully this fixes 
+	  support for inverse convention cards.
+	* Always select first protocol proposed by the ATR and default to T=0 
+	  if no protocol is available.
+	* The output of Get Status of CardTerminal command is now more 
+	  descriptive.
+	* Miscellaneous improvements to the tester application.
+	* USB support is enabled by default under Linux. A new option,
+	  --enable-usb-bundle is used to install PCSC Lite USB bundle.
+	* Compiling under CygWin 32 environment now generates a Windows DLL
+	  named cygtowitoko-2.dll. You'll need to run "reconf" before
+	  configure, having libtool 1.4e or greater installed.
+	* Compiling under CygWin 32 environment automatically selects the 
+	  option --enable-win32-com.
+
+2002-03-17  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.6
+	* Implemented 115200 bps baudrate for processor and memory cards.
+	* Disabled transportation of APDUs by T=0 protocol following ISO 7816-4 
+	  Annex A. Implemented option --enable-ISO-t0 to enable it.
+	* Fixed the number of null bytes (0x60) that T=0 protocol accepts from 
+	  the card before aborting transmission.
+	* Rewritten algorithm for memory smartcard type and memory size 
+	  detection.
+	* Implemented fake ATR return for I2C cards. This provides a way for 
+	  applications to retrieve smartcard memory size and smartcard type.
+	* Implemented the ability to select DIR, ATR and application data
+	  sections with memory cards according to MCT v09 part 5 spec.
+	* Fixed Read Binary command with memory cards to return all data
+	  available of the selected data section when Le=0 is specified.
+	* Implemented dynamic memory allocation of internal data buffers in
+	  protocol_sync and protocol_t1 for memory usage optimization.
+	* Added support for FreeBSD and OpenBSD. By Martin Preuss 
+	  <libchipcard@aquamaniac.de>
+
+2001-12-09  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.5
+	* Implemented PPS procedure and baudrate selection for processor cards. 
+	  See NEWS for details.
+	* Implemented access to memory cards at 57600 bps when supported by the 
+	  drive.
+	* Implemented optimization of write access to memory cards.
+	* Implemented support for Chipdrive USB under Linux. See NEWS for 
+	  details.
+	* Implemented support for multiple simultaneous readers in IFD Handler.
+	  PCSC Lite 1.0.1 or greater is needed.
+	* Implemented support for /dev/pcsc device links with the config option 
+	  --enable-devpcsc.
+	* Implemented debug of IFD Handler through syslog() with the config 
+	  option --enable-debug=4.
+	* Implemented the ability to use Windows CT-API style port numbering 
+	  with the option --enable-win32-com.
+	* Modified EJECT ICC: don't check eject handling instructions, so it 
+	  will not fail if the application uses CT-BCS 1.0 semantics. Return OK
+	  if the card is not removed and 0 seconds time limit is specified.
+	* Corrected  type of parameter in ctapi (3) manpage.
+	* Updated and summarized README file.
+	* Updated to Autoconf 2.52.
+
+2001-07-01  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.4
+	* Fixed work waiting time calculation for T=0.
+	* Implemented --enable-devfs option. This provides compatibility with
+	  Linux 2.4.X devfs.
+	* Made some modifications to the build system.
+	* Created DocBook SGML documentation.
+
+2001-04-08  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.3
+	* Fixed unassigned return value in protocol_t1.c when a 4 bytes
+	  block was read.
+	* Removed read-only probe of I2C cards in icc_sync.c that could lead
+	  to wrong detection of long I2C cards.
+	* Implemented configuration option --disable-atr-timings for cards
+	  whose ATR doesn't encode timings as defined by ISO 7816-3.
+	* Fixed icc_async.c to use a second buffer for reversing bytes sent
+	  to an inverse convention card.
+
+2001-01-14  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.2
+	* Fixed problem in autoconf that caused libtowitoko.so not to be
+	  linked in Linux when dummy libposix.a was present on the system.
+	* Implemented configuration option --enable-card-convention.
+	* Fixed configuration option --disable-atr-check.
+	* Driver compiles with "CFLAGS=-Wall -pedantic" without warnings.
+
+2000-12-29  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.1
+	* Implemented mutual exclusion on shared resources. The driver is
+	  now both reentrant and thread safe.
+	* Modified tester.c to work with multiple threads.
+	* Fixed BWT calculation in T=1.
+	* Fixed some typos in protocol_sync.c, cardterminal.c, and
+	  protocol_t0.c.
+	* Corrected some imprecisions in documentation files.
+
+2000-12-11  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.0.
+	* Implemented T=1 protocol. See the entry in file NEWS.
+	* Implemented PTS procedure.
+	* Implemented Extended APDU handling.
+	* Implemented mapping of Case 3 and Case 4 APDUs (both short and
+	  extended) onto corresponding TPDUs following ISO 7816-4  Annex A.
+	* Implemented inversion of ATR bytes when card has inverse
+	  convention.
+	* Implemented configuration option --disable-atr-check to allow
+	  smartcards with not standard ATR to be recognized.
+	* Implemented control of DTR and RTS modem lines.
+	* Micro controller parity is explicitly set to EVEN on  startup.
+	* Added configuration option --enable-card-type=[sync|async]  to
+	  disable probing of card type by the driver.
+	* Disabled writing retries while doing memory card probing for faster
+	  detection.
+	* Changed MT unsafe function usleep for nanosleep.
+	* Fixed extra guard time calculation in T=0 protocol.
+	* Fixed maximum size of buffers that the driver sends to an
+	  asynchronous smartcard in each access.
+	* Fixed character reading in tester.c.
+	* The Master File of memory cards is selected by default.
+	* Improved documentation.
+	* Implemented compatibility with IFD Handler 1.0 CHANNELID numbers.
+	* The driver compiles as a single library libtowitoko.so. The file
+	  /etc/reader.conf needs to be modified again. See the file  NEWS.
+	* The name of the whole thing have been changed to "MUSCLE driver
+	  for Towitoko smartcard readers" to better reflect what it is.
+
+2000-07-23  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.0-pre5
+	* Updated IFD Handler to version 2.0. See the file NEWS.
+	* T=0 speed fixed to 9600. See the note in protocol_t0.c.
+	* Fixed Verify Key command in tester.c.
+	* Changed returned data when wrong PIN was entered to a memory card.
+	* Fixed macros for parsing ATR of synchronous cards.
+	* Modified detection of card change in ct_slot.c.
+	* The file NEWS has been rewritten.
+	* Download web page changed to http://www.geocities.com/cprados.
+
+2000-06-18  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.0-pre4.
+	* Fixed 90 00 response when wrong pin was entered to a memory card.
+	* Fixed 64 00 response when sending "Reset ICC" to a memory card.
+	* Implemented parsing of memory cards ATR.
+	* CT-API releases card information when card change is detected,
+	  instead of doing it only when no card is detected.
+	* Fixed commands printed to screen with wrong length in tester.c.
+
+2000-06-11  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.0-pre3.
+	* CT-API now resynchronizes its status with the reader when
+	  requesting ICC status, so it is not necessary to issue "Eject ICC"
+	  after the card is removed.
+	* Done some orthographic and grammatical
+	  corrections to comments, debug messages and documentation.
+
+2000-06-10  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.0-pre2.
+	* Fixed IFD Handler.
+	* Fixed card insertion event in tester.c.
+	* Implemented communication with 2nd slot of Chipdrive Twin.
+
+2000-06-06  Carlos Prados <cprados@yahoo.com>
+
+	* First 2.0 pre-release.

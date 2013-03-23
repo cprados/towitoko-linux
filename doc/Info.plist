@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>libtowitoko.so.2.0.0</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>2.0.7</string>
+	<key>ifdCapabilities</key>
+	<string>0x00000000</string>
+	<key>ifdFriendlyName</key>
+	<string>Towitoko Chipdrive USB</string>
+	<key>ifdManufacturerString</key>
+	<string>Towitoko GMBH</string>
+	<key>ifdProductID</key>
+	<string>0x2303</string>
+	<key>ifdProductString</key>
+	<string>Towitoko Chipdrive USB</string>
+	<key>ifdProtocolSupport</key>
+	<string>0x00000001</string>
+	<key>ifdVendorID</key>
+	<string>0x067b</string>
+	<key>ifdVersionNumber</key>
+	<string>0x00000001</string>
+</dict>
+</plist>

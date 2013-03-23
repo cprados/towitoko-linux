@@ -1,0 +1,120 @@
+Unix driver for Towitoko smartcard readers
+Copyright (C) 1998 1999 2000 2001 Carlos Prados <cprados@yahoo.com>
+
+This library provides a driver for using Towitoko smartcard readers
+under UNIX environment.
+
+Smartcard API's provided:
+=========================
+
+* CT-API 1.1 and CT-BCS 0.9. See ctapi (3) and ctbcs (3) man pages
+  provided with this package.
+* PCSC Lite. See http://www.linuxnet.com for download and
+  documentation.
+
+Supported readers:
+==================
+
+* Towitoko Chipdrive Micro, Extern, Extern II, Intern, and Twin.
+* The most recent readers labelled as "Kartenzwerg" use
+  the same protocol as Chipdrive, and should work with this driver,
+  although they have not been tested.
+
+Supported interfaces:
+=====================
+
+* Serial readers: Configure you serial port like for a modem. See
+  http://www.linuxdoc.org/HOWTO/Serial-HOWTO.html
+* USB readers: Linux kernel version 2.4.12 or greater with PL2303 USB 
+  serial driver enabled is needed. 
+  See http://www.linux-usb.org/USB-guide/book1.html
+  Note that PL2303 support is still in experimental stage! 
+  Also note that pl2303.c drivers from kernel versions previous to 2.4.12 
+  will surely not work with this driver and will probably hang your machine.
+
+Supported smartcards:
+=====================
+
+* Processor cards: direct and inverse convention cards, T=0 and T=1
+  protocols. Short and extended case 1, 2, 3, 4 ISO 7816-3 APDU's. PPS and 
+  baudrate selection from 9600 bps to 115200 bps.
+* Memory cards: I2C, 2 wire and 3 wire bus protocol. Access to memory
+  cards is provided via the Interindustry Commands described in the
+  MCT v09 part 7 spec. See
+  http://www.panstruga.de/ct-api/spec/spec_v09.html
+
+Installation:
+=============
+
+See the file INSTALL.
+
+Special `configure` options:
+============================
+
+--enable-debug(=1|2|3|4)
+  Debug level 1,2 and 3 prints debug information to stdout. Debug level 4
+  prints debug information to syslog.
+
+--enable-card-type(=sync|async)
+--enable-card-convention(=dir|inv)
+--enable-memory-type(=i2cs|i2cl|2w|3w)
+  "sync" is for memory cards and "async" for processor cards. "inv"
+  is for inverse convention cards and "dir" for direct convention.
+  "i2cl" is for I2C cards with up to 16 kbits of  memory, "i2cl" for
+  I2C cards with up to 64 kbits of memory, 2w for 2 wire cards, and
+  3w for 3 wire cards. Enabling one option prevents the driver from
+  doing auto-detection.
+
+--enable-memory-size(=size)
+  By default memory size is set to 8192 bytes. If 0 length is
+  specified the driver will perform probing of memory size. Otherwise
+  the specified value will be used.
+
+--enable-ISO-t0
+  Transportation of APDUs by T=0. With T=0 cards this will enable the driver 
+  to automatically handle T=0 transaction control TPDUs following ISO 7816-4 
+  Annex A normative.
+
+--with-pcsc-lite-dir
+  PCSC Lite base directory (default=/usr/local/pcsc). USB bundle is
+  installed under $pcsc_lite_dir/drivers if USB support is enabled.
+
+--enable-usb
+  enable USB support (default=no).
+
+--enable-devfs
+  enable Linux 2.4.X devfs support (default=no).
+
+--enable-devpcsc
+  enable /dev/pcsc links support (default=no). Serial devices will be searched
+  at /dev/pcsc/1, /dev/pcsc/2, etc. You will have to create links to the actual
+  serial devices.
+
+--enable-win32-com
+  enable win32 style COM port numbering (default=no). Port numbers under CT-API
+  will start with 1 for COM1, 2 for COM2 and so on.
+
+--enable-thread-mutex
+  enable thread mutexes (default=yes). Needed for multi-threaded
+  applications.
+
+--enable-atr-check
+  enable checking of valid ATR (default=yes).
+
+--enable-atr-timings
+  enable decoding of timings from ATR (default=yes).
+
+Configuration:
+==============
+
+To configure a serial reader in PCSC Lite, copy the provided file
+doc/reader.conf to /etc/reader.conf and modify it to match your serial
+port settings. No configuration is needed for USB readers.
+
+TODO:
+=====
+
+* Update to CT-BCS 1.0.
+* Test inverse convention. Success has been reported with some inverse 
+  convetion cards, while faliures have been reported with others.
+* Test Chipdrive Twin and Kartenzwerg.

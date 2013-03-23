@@ -1,0 +1,169 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Enable win32 COM numbering */
+#undef CTAPI_WIN32_COM
+
+/* Debug CT-API */
+#undef DEBUG_CTAPI
+
+/* Debug Integrated Circuit Card */
+#undef DEBUG_ICC
+
+/* Debug Interface Device */
+#undef DEBUG_IFD
+
+/* Debug IFD Handler */
+#undef DEBUG_IFDH
+
+/* Debug Input/Output */
+#undef DEBUG_IO
+
+/* Debug Protocol */
+#undef DEBUG_PROTOCOL
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `nanosleep' function. */
+#undef HAVE_NANOSLEEP
+
+/* Define to 1 if you have the `poll' function. */
+#undef HAVE_POLL
+
+/* Define to 1 if you have the <pthread.h> header file. */
+#undef HAVE_PTHREAD_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `syslog' function. */
+#undef HAVE_SYSLOG
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Memory size */
+#undef ICC_SYNC_MEMORY_LENGTH
+
+/* Memory smartcard type (0,1,2,3) */
+#undef ICC_SYNC_MEMORY_TYPE
+
+/* Smartcard of type asynchronoys */
+#undef ICC_TYPE_ASYNC
+
+/* Smartcard of type synchronoys */
+#undef ICC_TYPE_SYNC
+
+/* Smartcard with direct convention */
+#undef IFD_TOWITOKO_CONVENTION_DIRECT
+
+/* Smartcard with inverse convention */
+#undef IFD_TOWITOKO_CONVENTION_INVERSE
+
+/* ATR for asynchronous cards is cheked */
+#undef IFD_TOWITOKO_STRICT_ATR_CHECK
+
+/* Enable Linux 2.4.X devfs support */
+#undef IO_ENABLE_DEVFS
+
+/* Enable /dev/pcsc/ links */
+#undef IO_ENABLE_DEVPCSC
+
+/* Enable USB support */
+#undef IO_ENABLE_USB
+
+/* FreeBSD Operating System */
+#undef OS_AIX
+
+/* Cywin32 for Windows NT environment */
+#undef OS_CYGWIN32
+
+/* FreeBSD Operating System */
+#undef OS_FREEBSD
+
+/* HPUX Operating System */
+#undef OS_HPUX
+
+/* IRIX Operating System */
+#undef OS_IRIX
+
+/* Linux Operating System */
+#undef OS_LINUX
+
+/* FreeBSD Operating System */
+#undef OS_NETBSD
+
+/* OpenBSD Operating System */
+#undef OS_OPENBSD
+
+/* Other Operating System */
+#undef OS_OTHER
+
+/* SCO Operating System */
+#undef OS_SCO
+
+/* Sun Operating System */
+#undef OS_SOLARIS
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Transportation of APDUs by T=0 */
+#undef PROTOCOL_T0_ISO
+
+/* Timings in ATR are not used in T=0 cards */
+#undef PROTOCOL_T0_USE_DEFAULT_TIMINGS
+
+/* Timings in ATR are not used in T=1 cards */
+#undef PROTOCOL_T1_USE_DEFAULT_TIMINGS
+
+/* Timings in ATR are not used after PTS */
+#undef PTS_USE_DEFAULT_TIMINGS
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Version number of package */
+#undef VERSION
+
+/* This may be usefull for LinuxThreads */
+#undef _REENTRANT

@@ -1,0 +1,239 @@
+.\" This -*- nroff -*- file has been generated from
+.\" DocBook SGML with docbook-to-man on Debian GNU/Linux.
+...\"
+...\"	transcript compatibility for postscript use.
+...\"
+...\"	synopsis:  .P! <file.ps>
+...\"
+.de P!
+\\&.
+.fl			\" force out current output buffer
+\\!%PB
+\\!/showpage{}def
+...\" the following is from Ken Flowers -- it prevents dictionary overflows
+\\!/tempdict 200 dict def tempdict begin
+.fl			\" prolog
+.sy cat \\$1\" bring in postscript file
+...\" the following line matches the tempdict above
+\\!end % tempdict %
+\\!PE
+\\!.
+.sp \\$2u	\" move below the image
+..
+.de pF
+.ie     \\*(f1 .ds f1 \\n(.f
+.el .ie \\*(f2 .ds f2 \\n(.f
+.el .ie \\*(f3 .ds f3 \\n(.f
+.el .ie \\*(f4 .ds f4 \\n(.f
+.el .tm ? font overflow
+.ft \\$1
+..
+.de fP
+.ie     !\\*(f4 \{\
+.	ft \\*(f4
+.	ds f4\"
+'	br \}
+.el .ie !\\*(f3 \{\
+.	ft \\*(f3
+.	ds f3\"
+'	br \}
+.el .ie !\\*(f2 \{\
+.	ft \\*(f2
+.	ds f2\"
+'	br \}
+.el .ie !\\*(f1 \{\
+.	ft \\*(f1
+.	ds f1\"
+'	br \}
+.el .tm ? font underflow
+..
+.ds f1\"
+.ds f2\"
+.ds f3\"
+.ds f4\"
+'\" t 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n  
+.TH "CT-API" "3" 
+.SH "NAME" 
+\fBCT_init, CT_data, CT_close\fR  \(em 	Functions to handle communication with integrated circuit cards and  
+cardterminals 
+ 
+.SH "SYNOPSIS" 
+.PP 
+.nf 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
+#include <ctapi.h> 
+.sp 1 
+\fBchar \fBCT_init\fP\fR( 
+\fB      unsigned short \fBctn\fR\fR, 
+\fB      unsigned short \fBpn\fR\fR); 
+.sp 1 
+\fBchar \fBCT_data\fP\fR( 
+\fB      unsigned short \fBctn\fR\fR, 
+\fB      unsigned char * \fBdad\fR\fR, 
+\fB      unsigned char * \fBsad\fR\fR, 
+\fB      unsigned short \fBlenc\fR\fR, 
+\fB      unsigned char * \fBcommand\fR\fR, 
+\fB      unsigned short * \fBlenr\fR\fR, 
+\fB      unsigned char * \fBresponse\fR\fR); 
+.sp 1 
+\fBchar \fBCT_close\fP\fR( 
+\fB      unsigned short \fBctn\fR\fR); 
+.fi 
+.SH "DESCRIPTION" 
+.PP 
+This manual page describes the CT-API functions used to handle 
+communication with integrated circuit cards and cardterminals. The  
+CT-API functions are generic, and allows the use of memory cards (often  
+referred as synchronous cards) and processor cards (often referred  
+as asynchronous cards). 
+ 
+.PP 
+The CT-API implementation is dependent on the cardterminal that is  
+used. For each cardterminal a CT-API library implementation  
+should be provided, either by the manufacturer or by third parties.  
+This manpage is not a complete specification of the CT-API, but  
+a general overview of the most common functionalities. 
+ 
+.PP 
+\fBCT_init()\fP selects and initializes the  
+interface with the cardterminal (f.i. serial port, USB bus, or any  
+other type of connector). The CT_init() function must be called before  
+communicating with the card or the cardterminal. A unique cardterminal  
+number chosen by the caller is assigned by the CT-API library to the  
+initialized connection. 
+ 
+.IP "\fBctn\fR" 10 
+Cardterminal number: identifies the connection with the 
+cardterminal for further references. It's chosen by the caller 
+of the function. 
+ 
+.IP "\fBpn\fR" 10 
+Port number: selects the physical interface. The port number 
+assignment is dependent on the CT-API implementation. However most 
+serial cardterminal implementations use the convention of assigning  
+the value 0 to the first serial port, 1 to the second serial port and  
+so on. See the file \fB/usr/include/ctapi.h\fP of 
+your CT-API implementation for a list of allowed values. 
+ 
+.PP 
+\fBCT_data()\fP sends a command to the card or to  
+the cardterminal and returns the response to the calling program. 
+ 
+.IP "\fBctn\fR" 10 
+Cardterminal number: the number specified in \fBCT_init() 
+\fP call for this cardterminal. 
+ 
+.IP "\fBdad\fR" 10 
+Destination address. If the command is sent to the cardterminal,  
+it must point to a variable containing the value CT (0x01). If the  
+command is sent to a card, the destination address variable must be  
+set to the number identifying the slot of the cardterminal where the  
+card is inserted, ranging from ICC1 (0x00) and ICC2 (0x02) to ICC14  
+(0x0E). 
+ 
+.IP "" 10 
+On the return of the response, the variable pointed by dad is set to  
+the value HOST (0x02) or REMOTE_HOST (0x05). 
+ 
+.IP "\fBsad\fR" 10 
+Source address. When the function is called it is usually set to  
+point to a variable with the value HOST (0x02), although the value 
+REMOTE_HOST (0x05) may ocurr in some applications if the CT-API  
+implementation supports remote calls. 
+ 
+.IP "" 10 
+On the return of the response, the variable pointed by sad is set to any  
+of the values from CT (0x01), ICC1 (0x00), ICC2 (0x02) to ICC14 (0x0E). 
+ 
+.IP "\fBlenc\fR" 10 
+Command length in bytes. 
+ 
+.IP "\fBcommand\fR" 10 
+Pointer to the buffer that conveys the command to be sent 
+to the card or cardterminal. 
+ 
+.IP "\fBlenr\fR" 10 
+Before function call, pointer to a variable containig the  
+maximum buffer size in bytes for the response data. After  
+successful function call it contains the size in bytes of the  
+response data. 
+ 
+.IP "\fBresponse\fR" 10 
+Pointer to the response data. Memory buffer of at least the size 
+in bytes specified in \fBlenr\fR must be allocated  
+before calling to the function. 
+ 
+.PP 
+\fBCT_close()\fP terminates the communication  
+with the cardterminal which has been assigned to a logical cardterminal 
+number by the function \fBCT_init()\fP. The function  
+shall be called for each initialized cardtreminal before the end of  
+the program in order to free resources if necessary. 
+ 
+.IP "\fBctn\fR" 10 
+Cardterminal number: as specified in \fBCT_init() 
+\fP call for this cardterminal. 
+ 
+.SH "RETURN VALUE" 
+.PP 
+\fBCT_init(),\fP \fBCT_data(),\fP         and \fBCT_close()\fP functions return a value of type 
+char. 
+ 
+.IP "\fBOK\fR" 10 
+Function call was successful. 
+ 
+.IP "\fBERR_INVALID\fR" 10 
+Invalid parameter or value. 
+ 
+.IP "\fBERR_CT\fR" 10 
+Cardterminal Error. The cardterminal is temporarily not 
+accessible (busy with  other or internal processes). The problem can 
+be solved by the application. 
+ 
+.IP "\fBERR_TRANS\fR" 10 
+Transmission Error. Transmission errors due to mechanical,  
+electrical or protocol failures. Reset of the cardterminal is  
+necessary. 
+ 
+.IP "\fBERR_MEMORY\fR" 10 
+Memory assignment error. A memory error occurred (f.i. the  
+allocated buffer is too small for the returned data). 
+ 
+.IP "\fBERR_HTSI\fR" 10 
+Host Transport Service Interface error. Commonly returned if 
+the error is produced by the software layer and not in the  
+communication with the hardware. 
+ 
+.SH "SEE ALSO" 
+.PP 
+ctbcs (3). 
+.PP 
+The \fBMKT\fP (Multifunktionale  
+KartenTerminals) specifications, available for download from  
+Teletrust website  
+\fIhttp://www.teletrust.de (link to URL http://www.teletrust.de) \fR. 
+In special the documents: 
+.IP "Part 3:" 10 
+CT-API. Cardterminal Applications Programming Interface. 
+ 
+.IP "Part 4:" 10 
+CT-BCS. Cardterminal Basic Command Set. 
+ 
+.IP "Part 7:" 10 
+IC cards with synchronous transmission Part3: Usage of  
+interindustry Commands. 
+ 
+.PP 
+ISO/IEC 7816: \fBIdentification cards - Integrated circuit(s)  
+cards with contacts\fP:  
+ 
+.IP "Part 4:" 10 
+Interindustry commands for interchange. 
+ 
+.SH "AUTHOR" 
+.PP 
+This manual page was written by Carlos Prados  
+<cprados@yahoo.com>. 
+ 
+...\" created by instant / docbook-to-man, Sat 01 Dec 2001, 19:51 
