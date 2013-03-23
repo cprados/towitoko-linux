@@ -1,0 +1,112 @@
+Unix driver for Towitoko smartcard readers
+Copyright (C) 2000 2001 Carlos Prados <>
+
+SUPPORT FOR PPS AND BAUDRATE GREATER THAN 9600 BPS
+
+Starting with the release 2.0.5 it's possible to specify a PPS request to be
+negotiated with the card. After completion of a successful PPS handshake,
+the unit will be configured automatically to support the protocol, parameters
+and baudrate agreed.
+
+Baudrates of 9600 bps, 14400 bps, 19200 bps, 28800 bps, 38400 bps and 57600 bps
+are supported by the driver.  
+
+To access this functionality under CT-API, the application must issue a RESET CT
+or REQUEST ICC and put the PPS request (at least PPSS and PPS0) in the data 
+field of the CT-BCS command.
+
+Under PCSC Lite the PPS request can be sent within a CT-BCS command, using the
+function SCardControl().
+
+Memory cards are accessed by default at 57600 bps if the unit supports this
+baudrate, without having to modify the programs.
+
+SUPPORT FOR CHIPDRIVE USB
+
+Chipdrive USB is supported under Linux since release 2.0.5. You need 
+a Linux kernel version 2.4.12 or greater with USB support compiled 
+and pl2303 USB to serial converter driver enabled.
+
+To use an USB Chipdrive with CT-API, specify port numbers starting
+with 0x8000:
+* 0x8000 for /dev/ttyUSB0, (first USB serial device)
+* 0x8001 for /dev/ttyUSB1, (second USB serial device) and so on.
+
+You can also create a symlink from /dev/ttyS[pn] to /dev/ttyUSB[m] and
+access the reader at COM[pn+1], as with the serial model.
+
+Under PCSC Lite just plug the reader and it will be automatically
+detected and initialized by PCSC daemon. They name assigned by 
+SCardListReaders will be "Towitoko Chipdrive USB 0 0".
+
+SUPPORT FOR T=1 PROTOCOL
+
+Smartcards with transmission protocol T=1 are supported since release
+2.0.0.
+
+When a card is reset, T=1 protocol is automatically selected if it is
+offered by the card in its answer to reset. PTS protocol is performed
+if  needed. Otherwise T=0 is used.
+
+CHANGE IN THE NAME OF THE SHARED LIBRARY
+
+Since release 2.0.0 the core driver and the interfaces are linked in a
+single shared library, called libtowitoko.
+
+In consequence the name of the library declared in PC/SC Lite
+configuration file /etc/reader.conf must be changed to:
+
+<path>/lib/libtowitoko.<extension>
+
+Where <path> stands for the place where you installed the binary
+distribution of the driver (like "/usr/local"), and <extension> is the
+suffix of the name of shared libraries in you system (like "so").
+
+A sample reader.conf file is included under doc/.
+
+CHANGES IN THE INTERFACE WITH PC/SC LITE (release 2.0.0-pre5)
+
+Version 2.0.0-pre5 comes with IFD handler 2.0. In contrast with
+previous IFD handler, this module has been designed to support any
+number of readers and slots per instance of the driver.
+
+Also it permits the driver to return the ATR and its length when this
+parameter is requested by PC/SC Lite, so it does not need to re-parse
+the ATR. This allows memory cards, whose ATR does not follow ISO 7816
+rules to be handled.
+
+To simplify the /etc/reader.conf syntax, the channel number CHANNELID
+now does not use the serial port IO and IRQ number but the COM number,
+following MS-DOS numbering convention. That is 0x000001 for COM1
+(/dev/ttyS0), 0x000002 for COM2 (/dev/ttyS1) and so on. Don't forget
+to change this parameter in your /etc/reader.conf file if you upgrade
+to 2.0.0-pre5.
+
+Note that PC/SC Lite 0.7.1 or greater is needed to use IFD Handler
+2.0.
+
+CHANGES IN RELEASE 2.0.0-pre1
+
+Since 1.X releases most of the code has been rewritten. The driver has
+more than 8000 lines of code. Nevertheless now it's more modular and
+easy to maintain. The new structure split the functionality between
+modules that implement objects. Each object has the methods (C
+functions) to handle a part of the communication, and the member
+variables  (registers of C structures) to store status information
+needed for this part of  the communication.
+
+As result the new driver is able to handle any number of readers, with
+any number of slots and smartcards at one time.
+
+Object modules has been added to implement support for memory cards
+and provide access through MCT v0.9 interindustry commands.
+
+Interface device module has been improved to be able to dynamically
+adapt its settings to support communication with inverse convention
+cards and with Kartenzwerg readers.
+
+The serial device code has been rewritten and improved. The new serial
+object does PnP COM recognition of the reader on initialization. The
+platform dependent code has been wrapped with #ifdef's to provide
+Input/Output routines for Linux, Solaris and CygWin32 environments,
+and make it extensible for other Operating Systems.

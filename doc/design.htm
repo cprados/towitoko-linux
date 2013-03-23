@@ -1,0 +1,401 @@
+<HTML
+><HEAD
+><TITLE
+>UNIX Towitoko Driver Design</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.64
+"></HEAD
+><BODY
+CLASS="ARTICLE"
+><DIV
+CLASS="ARTICLE"
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>UNIX Towitoko Driver Design</A
+></H1
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN6"
+>Carlos Prados</A
+></H3
+><P
+CLASS="COPYRIGHT"
+>Copyright &copy; 2001 by Carlos Prados</P
+><HR></DIV
+><P
+>This document explains the design guidelines followed for the implementation 
+of this driver. You may be interested in reading this document if you intend 
+to extend, improve, fix or some other way modify the source code of this software.</P
+><DIV
+CLASS="SECT1"
+><HR><H1
+CLASS="SECT1"
+><A
+NAME="AEN14"
+>Architectural Design</A
+></H1
+><P
+> 
+The driver is composed of two distinct parts: the core driver and the 
+interfaces. The core driver has the responsibility of handling the reader.
+It's code is tied to the reader hardware and interface, etc.</P
+><P
+>The interfaces are located in separate directories, and use the API
+provided by the core driver to implement an interface specification, on top of 
+the core driver. Currently there are two interfaces implemented: CT-API / CT-BCS 
+and PCSC Lite IFD Handler, but other interfaces could be written.</P
+><P
+>The driver is designed following an object oriented style. There are several 
+classes implemented as Abstract Data Types, that interact to provide the whole 
+functionality. </P
+><P
+>Also there exists several communication layers, each containing a set of 
+classes.</P
+><DIV
+CLASS="SECT2"
+><HR><H2
+CLASS="SECT2"
+><A
+NAME="AEN20"
+>The Core Driver</A
+></H2
+><P
+>The core driver has the following layers:</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>IO, </DT
+><DD
+><P
+>	Provides Input/Output communication with the device to which the reader 
+  	is attached. An <TT
+CLASS="CLASSNAME"
+>IO_Serial</TT
+> object provides access 
+	and configuration the serial port.
+	</P
+></DD
+><DT
+>IFD, </DT
+><DD
+><P
+>	Provides access to the functionality of one interface device, such as 
+	transparent transmission and reception, reading and writing of memory 
+	buffers, etc. One or more IFD's can be attached to the same IO object. The 
+	<TT
+CLASS="CLASSNAME"
+>IFD_Towitoko</TT
+> class provides this functionality for 
+	Towitoko reader.
+	</P
+></DD
+><DT
+>ICC, </DT
+><DD
+><P
+> 
+	This layer abstracts the upper layer from the issues related to 
+	having different types of integrated circuit cards. There are two objects 
+	within this layer: <TT
+CLASS="CLASSNAME"
+>ICC_Async</TT
+> that encapsulates the 
+	functionality to access asynchronous (processor) cards, and <TT
+CLASS="CLASSNAME"
+>	ICC_Sync</TT
+> that does the equivalent for synchronous (memory) cards. 
+	Only one ICC object can be attached to the same IFD at a time.
+	</P
+></DD
+><DT
+>Protocol, </DT
+><DD
+><P
+> 
+	Implements card access via commands and responses. A different protocol 
+	implementation is needed depending on the type of ICC. <TT
+CLASS="CLASSNAME"
+>Protocol_Sync
+	</TT
+> class provides a command interface for synchronous cards. 
+	<TT
+CLASS="CLASSNAME"
+>Protocol_T0</TT
+> class provides a command interface 
+	for processor cards using T=0 protocol. <TT
+CLASS="CLASSNAME"
+>Protocol_T1</TT
+>
+	class provides a command interface for processor cards using T=1 protocol.
+	Only one Protocol object is attached to one ICC object.
+	</P
+></DD
+></DL
+></DIV
+><P
+>The following diagram illustrates the class structure of the core driver.</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                  +---------------+   +---------------+   +---------------+ 
+  Protocol Layer  | Protocol_Sync |   |  Protocol_T0  |   |  Protocol_T1  |
+                  +---------------+   +---------------+   +---------------+
+  - - - - - - - - - - - - | - - - - - - - - - | - - - - - - - - - | - - - - -
+                          v                   v                   v
+                  +---------------+   +-----------------------------------+
+  ICC Layer       |   ICC_Sync    |   |             ICC_Async             |
+                  +---------------+   +-----------------------------------+
+  - - - - - - - - - - - - | - - - - - - - - - - - - - - | - - - - - - - - - -
+                          v                             v
+                  +-------------------------------------------------------+
+  IFD Layer       |                      IFD_Towitoko                     | 
+                  +-------------------------------------------------------+
+  - - - - - - - - - - - - - - - - - - - - - - | - - - - - - - - - - - - - - -
+                                              v
+                  +-------------------------------------------------------+
+  IO Layer        |                       IO_Serial                       |
+                  +-------------------------------------------------------+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        
+                                      POSIX I/0 routines</PRE
+></TD
+></TR
+></TABLE
+><P
+>There is also a set of utility classes that represent data exchanged between 
+layers, such as <TT
+CLASS="CLASSNAME"
+>ATR</TT
+> and <TT
+CLASS="CLASSNAME"
+>ATR_Sync</TT
+> 
+that conveys the answer to reset of the smartcards, and the <TT
+CLASS="CLASSNAME"
+>APDU_Cmd</TT
+> and <TT
+CLASS="CLASSNAME"
+>APDU_Rsp</TT
+> classes that handle command and 
+response messages exchanged between the application and the protocol layer. 
+Each object contains the data and the methods for creating, accessing, and 
+deleting it.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><HR><H2
+CLASS="SECT2"
+><A
+NAME="AEN58"
+>The CT-API / CT-BCS Interface</A
+></H2
+><P
+>The CT-API interface interacts with the classes provided by the core driver to
+implement the function calls defined in the CT-API and CT-BCS specification.
+The CT-API has access to every class defined in the core driver, so it can
+create the objects and call its functionality as it is needed.</P
+><P
+>CT-API / CT_BCS interface contains three classes: </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+><TT
+CLASS="CLASSNAME"
+>CardTerminal</TT
+>, </DT
+><DD
+><P
+>	A <TT
+CLASS="CLASSNAME"
+>CardTerminal</TT
+> object represent one reader with 
+	any number of ICC slots, that is attached to a serial port. A 
+	<TT
+CLASS="CLASSNAME"
+>CardTerminal</TT
+> can be initialized, sent a CT-BCS 
+	control command and closed.  
+	</P
+></DD
+><DT
+><TT
+CLASS="CLASSNAME"
+>CT_Slot</TT
+>, </DT
+><DD
+><P
+>	A <TT
+CLASS="CLASSNAME"
+>CT_Slot</TT
+> object represent one slot located in a 
+	CardTerminal. It contains one IFD object, which can have one ICC inserted 
+	and one Protocol object to handle the ICC. A CT_Slot object can be initialized 
+	and closed by the CardTerminal, accept commands for the ICC, and has control 
+	methods for checking the presence of card and detecting the type of card 
+	inserted. 
+	</P
+></DD
+><DT
+><TT
+CLASS="CLASSNAME"
+>CT_List</TT
+>, </DT
+><DD
+><P
+>	The CT-API interface defines that any number of CardTerminals can
+	be attached to a single machine, each one accessible via a <TT
+CLASS="LITERAL"
+>ctn
+	</TT
+> number. <TT
+CLASS="CLASSNAME"
+>CT_List</TT
+> implements a linked 
+	list that stores CardTerminal objects that are created by the user, 
+	so they can be obtained and erased giving its <TT
+CLASS="LITERAL"
+>ctn</TT
+>
+	identification.
+	</P
+></DD
+></DL
+></DIV
+><P
+>The following diagram represent the interactions between the 
+CT-API / CT-BCS interface and the layers of the core driver.</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>                        +-------------------------------+
+                        |         CT-API / CT-BCS       |
+                        +-------+-----------------------+
+                        |       |        CT_Slot        |
+                        |       |       +---------------+
+                        |       |       |    Protocol   |
+                        |       |       |---------------|
+                        |       |       |      ICC      |
+                        |       |       |---------------|
+                        |       |       |      IFD      |
+                        |       +-------+---------------+
+                        | CardTerminal  |      IO       |
+                        +---------------+---------------+</PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="SECT2"
+><HR><H2
+CLASS="SECT2"
+><A
+NAME="AEN89"
+>The PCSC Lite IFD Handler Interface</A
+></H2
+><P
+>The PCSC IFD handler is a simple layer on top of CT-API / CT-BCS interface 
+that implements the mapping to the functions needed to access the driver via 
+MUSCLE PCSC Lite Resource manager.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT1"
+><HR><H1
+CLASS="SECT1"
+><A
+NAME="AEN92"
+>Multi-Threading Design</A
+></H1
+><P
+>This chapter explains guidelines followed in order to thread-enable the
+access to smartcard and terminal resources provided by the driver. </P
+><P
+>The goal is allow a Multi-threading application to use one or more readers 
+and smartcards from one or more threads concurrently, managing the access
+to shared resources as efficiently as possible.</P
+><P
+>The responsibility of providing thread-safe functionality to the  
+application is distributed between the core driver and the Interfaces:</P
+><P
+>The core driver functions are reentrant, but not thread-safe:</P
+><P
+></P
+><UL
+><LI
+><P
+>	They do not use any static variable in read/write mode.
+	</P
+></LI
+><LI
+><P
+>	They do not return a reference to static data. All data managed by
+	functions are provided by the caller of the function.
+	</P
+></LI
+><LI
+><P
+>	They do not call non-reentrant functions.
+	</P
+></LI
+><LI
+><P
+>	They are not thread-safe because they share physical resources like the 
+	serial port, the smartcard and the reader, whose response depends on the
+	order in which they receive events. It's not responsibility of 
+	the core driver to implement access in mutual exclusion to these resources.
+	</P
+></LI
+></UL
+><P
+>The Interfaces are thread-safe, but not necessarily reentrant:</P
+><P
+></P
+><UL
+><LI
+><P
+>	CT-API cannot be reentrant because it's design force to maintain
+	a static list of card-terminal contexts.
+	</P
+></LI
+><LI
+><P
+>	IFD Handler cannot be reentrant as far as it's based on CT-API 
+	interface.
+	</P
+></LI
+><LI
+><P
+>	Both of these interfaces and future interfaces must implement mutual
+	exclusion access to it's static variables, and serialize the access
+	to the resources IO, IFD, ICC and Protocol, provided by the core driver.
+	</P
+></LI
+></UL
+></DIV
+></DIV
+></BODY
+></HTML
+>
