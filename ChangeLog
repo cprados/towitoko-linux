@@ -6,6 +6,7 @@
 	* Corrected timeout value in atr reading that was set too low for
 	  certain cards (and particularly for Spanish DNIe national identity
 	  card).
+	* New downlad page: https://github.com/cprados/towitoko-linux
 	* Cleaned README file.
 
 2002-08-18  Carlos Prados  <cprados@yahoo.com>
