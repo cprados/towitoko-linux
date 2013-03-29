@@ -1,0 +1,10 @@
+Template: libtowitoko2/port
+Type: select
+_Choices: ttyS0, ttyS1, ttyS2, ttyS3, ttyUSB0, ttyUSB1, ttyUSB2, ttyUSB3
+_Description: On which serial port is connected the smart card reader?
+ PCSC needs to know on which serial port the reader is connected. This
+ information is stored in the file /etc/reader.conf.
+ .
+ You should not edit this file directly but create or modify a file in
+ /etc/reader.conf.d/ and use update-reader.conf(8) to regenerate
+ /etc/reader.conf.

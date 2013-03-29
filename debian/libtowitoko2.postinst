@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# postinst configure most-recently-configured-version 
+# old-postinst abort-upgrade new-version 
+# conflictor's-postinst abort-remove in-favour package new-version 
+# deconfigured's-postinst abort-deconfigure in-favour failed-install-package version removing conflicting-package version 
+#
+
+set -e
+
+cfgdir=/etc/reader.conf.d
+cfg=$cfgdir/libtowitoko2
+lib=/usr/lib/libtowitoko.so.2.0.0
+pcsclite_dir=/usr/lib/pcsc
+
+if [ "$1" = "configure" ]; then
+
+  # Source debconf library.
+  . /usr/share/debconf/confmodule
+
+  db_get 'libtowitoko2/port' || true
+  SERIAL_PORT="$RET"
+
+  if [ "$RET" != "USB" ]; then
+
+    # First make sure the cfgdir exists
+    if [ ! -d $cfgdir ]; then
+      mkdir -p $cfgdir
+    fi
+
+    echo "FRIENDLYNAME      \"Towitoko Chipdrive Reader\"" > $cfg
+    echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
+    echo "LIBPATH           $lib" >> $cfg
+
+    case "$SERIAL_PORT" in
+      ttyS0)
+        echo "CHANNELID         0x0103F8" >> $cfg
+        ;;
+      ttyS1)
+        echo "CHANNELID         0x0102F8" >> $cfg
+        ;;
+      ttyS2)
+        echo "CHANNELID         0x0103E8" >> $cfg
+        ;;
+      ttyS3)
+        echo "CHANNELID         0x0102E8" >> $cfg
+        ;;
+      ttyUSB0)
+        echo "CHANNELID         0x200000" >> $cfg
+        ;;
+      ttyUSB1)
+        echo "CHANNELID         0x200001" >> $cfg
+        ;;
+      ttyUSB2)
+        echo "CHANNELID         0x200002" >> $cfg
+        ;;
+      ttyUSB3)
+        echo "CHANNELID         0x200003" >> $cfg
+        ;;
+      *)
+        echo "Error: serial port unknown ($SERIAL_PORT)"
+        ;;
+    esac
+
+    # regenerate /etc/reader.conf if update-reader.conf is available
+    if [ -x /usr/sbin/update-reader.conf ]; then
+      /usr/sbin/update-reader.conf || true
+    fi
+  fi
+
+  db_stop
+
+  if [ -x /etc/init.d/pcscd ]; then
+    invoke-rc.d pcscd restart 3>/dev/null
+  fi
+fi
+
+#DEBHELPER#

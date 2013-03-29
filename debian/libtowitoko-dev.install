@@ -1,0 +1,6 @@
+debian/tmp/usr/bin/towitoko-tester
+debian/tmp/usr/lib/libtowitoko.so
+debian/tmp/usr/lib/libtowitoko.a
+debian/tmp/usr/lib/libtowitoko.la
+debian/tmp/usr/include/* ./usr/include/towitoko/
+debian/tmp/usr/share/man

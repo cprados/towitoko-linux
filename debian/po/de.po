@@ -1,0 +1,51 @@
+# Translation of towitoko debconf templates to German
+# Copyright (C) ...
+# Copyright (C) Helge Kreutzmann <debian@helgefjell.de>, 2009.
+# This file is distributed under the same license as the towitoko package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: towitoko 2.0.7-8.2\n"
+"Report-Msgid-Bugs-To: towitoko@packages.debian.org\n"
+"POT-Creation-Date: 2010-02-19 07:38+0100\n"
+"PO-Revision-Date: 2011-06-07 11:12+0200\n"
+"Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
+"Language-Team: de <debian-l10n-german@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../libtowitoko2.templates:1001
+msgid "ttyS0, ttyS1, ttyS2, ttyS3, USB"
+msgstr "ttyS0, ttyS1, ttyS2, ttyS3, USB"
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid "On which serial port is connected the smart card reader?"
+msgstr ""
+"Mit welcher seriellen Schnittstelle ist der Chipkarten-Leser verbunden?"
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid ""
+"PCSC needs to know on which serial port the reader is connected. This "
+"information is stored in the file /etc/reader.conf."
+msgstr ""
+"PCSC muss wissen, mit welcher seriellen Schnittstelle der Leser verbunden "
+"ist. Diese Information wird in der Datei /etc/reader.conf gespeichert."
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid ""
+"You should not edit this file directly but create or modify a file in /etc/"
+"reader.conf.d/ and use update-reader.conf(8) to regenerate /etc/reader.conf."
+msgstr ""
+"Sie sollten diese Datei nicht direkt ändern, statt dessen sollte eine Datei "
+"in /etc/reader.conf.d/ erzeugt bzw. verändert werden und daraus dann über "
+"update-reader.conf(8) die Datei /etc/reader.conf neu generiert werden."

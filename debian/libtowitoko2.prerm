@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# prerm remove 
+# old-prerm upgrade new-version 
+# new-prerm failed-upgrade old-version 
+# conflictor's-prerm remove in-favour package new-version 
+# deconfigured's-prerm deconfigure in-favour package-being-installed version removing conflicting-package version 
+#
+
+set -e 
+
+case "$1" in
+    remove|upgrade|deconfigure)
+
+    # remove reader.conf definition for Towitoko 
+    rm -f /etc/reader.conf.d/libtowitoko2
+    ;;
+
+esac
+
+#DEBHELPER#

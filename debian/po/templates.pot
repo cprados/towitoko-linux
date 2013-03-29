@@ -1,0 +1,45 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: towitoko@packages.debian.org\n"
+"POT-Creation-Date: 2010-02-19 07:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../libtowitoko2.templates:1001
+msgid "ttyS0, ttyS1, ttyS2, ttyS3, USB"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid "On which serial port is connected the smart card reader?"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid ""
+"PCSC needs to know on which serial port the reader is connected. This "
+"information is stored in the file /etc/reader.conf."
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid ""
+"You should not edit this file directly but create or modify a file in /etc/"
+"reader.conf.d/ and use update-reader.conf(8) to regenerate /etc/reader.conf."
+msgstr ""

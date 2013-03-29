@@ -1,0 +1,49 @@
+# Portuguese translation of towitoko.
+# This file is distributed under the same license as the towitoko package.
+# Luísa Lourenço <kikentai@gmail.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: towitoko 2.0.7-7.1\n"
+"Report-Msgid-Bugs-To: towitoko@packages.debian.org\n"
+"POT-Creation-Date: 2010-02-19 07:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Luísa Lourenço <kikentai@gmail.com>\n"
+"Language-Team: Native Portuguese <traduz@debianpt.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../libtowitoko2.templates:1001
+msgid "ttyS0, ttyS1, ttyS2, ttyS3, USB"
+msgstr "ttyS0, ttyS1, ttyS2, ttyS3, USB"
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid "On which serial port is connected the smart card reader?"
+msgstr "Em qual porta série está ligado o leitor de 'smart card'?"
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid ""
+"PCSC needs to know on which serial port the reader is connected. This "
+"information is stored in the file /etc/reader.conf."
+msgstr ""
+"O PCSC precisa de saber em qual porta série o leitor está ligado. Esta "
+"informação é guardada no ficheiro /etc/reader.conf."
+
+#. Type: select
+#. Description
+#: ../libtowitoko2.templates:1002
+msgid ""
+"You should not edit this file directly but create or modify a file in /etc/"
+"reader.conf.d/ and use update-reader.conf(8) to regenerate /etc/reader.conf."
+msgstr ""
+"Não deve editar este ficheiro directamente mas criar ou modificar um "
+"ficheiro em /etc/reader.conf.d/ e usar update-reader.conf(8) para recriar o /"
+"etc/reader.conf."

@@ -1,0 +1,239 @@
+towitoko (2.0.8-1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * New upstream release.
+  * Fix issues related to usb bundle installation (Closes: #603130, #168674).
+
+ -- Carlos Prados Bocos <cprados@yahoo.com>  Fry, 29 Mar 2013 23::56 +0200
+
+towitoko (2.0.7-8.3) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix pending l10n issues. Debconf translations:
+    - Italian (Vincenzo Campanella).  Closes: #571988
+    - Danish (Joe Hansen).  Closes: #593273
+    - German (Helge Kreutzmann).  Closes: #630215
+    - Polish (Michał Kułach).  Closes: #657459
+
+ -- Christian Perrier <bubulle@debian.org>  Wed, 01 Feb 2012 20:22:25 +0100
+
+towitoko (2.0.7-8.2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Move libtowitoko-dev headers to sub-directory (Closes:
+    #557495)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 07 Dec 2010 21:29:39 +0000
+
+towitoko (2.0.7-8.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix pending l10n issues. Debconf translations:
+    - Japanese (Hideki Yamane (Debian-JP)).  Closes: #512980
+    - Slovak (Ivan Masár).  Closes: #570507
+
+ -- Christian Perrier <bubulle@debian.org>  Mon, 19 Jul 2010 21:17:05 +0200
+
+towitoko (2.0.7-8) unstable; urgency=low
+
+  * Bump debhelper compat level
+  * Update control file, bump Standards-Version
+  * Add mechanism to update config.guess/sub (Closes: #536411)
+
+ -- Simon Richter <sjr@debian.org>  Fri, 10 Jul 2009 14:11:24 +0200
+
+towitoko (2.0.7-7.3) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * High-urgency upload for RC bugfix.
+  * Use invoke-rc.d and the standard 'restart' command for pcscd in
+    postinst/postrm, instead of calling the pcscd init script directly with
+    the no-longer-supported 'restart-if-running' command.  Closes: #407361.
+
+ -- Steve Langasek <vorlon@debian.org>  Sun, 11 Mar 2007 03:12:04 -0700
+
+towitoko (2.0.7-7.2) unstable; urgency=low
+
+  * Non-maintainer upload to fix pending l10n issues.
+  * Debconf translations:
+    - Portuguese. Closes: #383836
+
+ -- Christian Perrier <bubulle@debian.org>  Sun, 18 Feb 2007 19:22:15 +0100
+
+towitoko (2.0.7-7.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Properly update libtool by running:
+     + libtoolize -c -f
+     + aclocal
+     + autoconf
+     + automake
+     (Closes: #342687, #349807).
+  * debian/control:
+    + Bumped Standards-Version to 3.7.2 (no changes).
+  * Added Swedish debconf translation, courtesy of Daniel Nylander
+    (Closes: #330945).
+  * Added Vietnamese debconf translation, courtesy of Clytie Siddall
+    (Closes: #322317).
+
+ -- Julien BLACHE <jblache@debian.org>  Sun,  4 Jun 2006 16:49:51 +0200
+
+towitoko (2.0.7-7) unstable; urgency=low
+
+  * Updated ltmain.sh as well (Really Closes: #342687)
+
+ -- Simon Richter <sjr@debian.org>  Fri, 20 Jan 2006 22:34:48 +0100
+
+towitoko (2.0.7-6) unstable; urgency=low
+
+  * Added debconf-2.0 alternate (Closes: #332120)
+
+ -- Simon Richter <sjr@debian.org>  Fri, 20 Jan 2006 20:38:48 +0100
+
+towitoko (2.0.7-5) unstable; urgency=low
+
+  * Updated config.{guess,sub} (Closes: #342687)
+
+ -- Simon Richter <sjr@debian.org>  Fri, 20 Jan 2006 20:18:20 +0100
+
+towitoko (2.0.7-4) unstable; urgency=low
+
+  * Adopted. (Closes: #288232)
+  * Bumped Standards-Version
+  * USB drivers are now installed unconditionally
+  * Packaging rework, moved to dh_install and misc. bits
+
+ -- Simon Richter <sjr@debian.org>  Sun, 22 May 2005 19:49:12 +0200
+
+towitoko (2.0.7-3) unstable; urgency=low
+
+  * QA Group upload orphaning this package
+  * debian/control: [libtowitoko-dev]: changed Section: to libdevel
+  * Incorporates previous NMU (closes: #202956)
+  * Added Czech debconf template translation (closes: #298317)
+  * debian/libtowitoko2.postrm: don't fall over if restart exits with non-zero
+    return code (closes: #253321)
+
+ -- Andrew Pollock <apollock@debian.org>  Wed, 16 Mar 2005 10:52:59 +1100
+
+towitoko (2.0.7-2.1) unstable; urgency=low
+
+  * NMU
+  * debian/control:
+   - Suggests: libpcsclite1 instead of libpcsclite0
+   - remove useless Build-Depends: debmake
+  * switch to gettext-based debconf templates. Closes: #202956
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Tue,  1 Jun 2004 00:18:41 +0200
+
+towitoko (2.0.7-2) unstable; urgency=low
+
+  * Fixed typos in atr.c and atr.h. 
+  * Fixed a bug introduced at towitoko-tester in 2.0.7 that prevented 
+    to correctly read bytes from standard input on some commands. 
+  * Updated description of USB compilation options at README.
+
+ -- Carlos Prados <cprados@debian.org>  Sun, 22 Sep 2002 00:55:34 +0200
+
+towitoko (2.0.7-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added towitoko-tester to the devel package. Created towitoko-tester.1
+    man page. 
+  * Switched to DH_COMPAT=4.
+
+ -- Carlos Prados <cprados@debian.org>  Sun, 25 Aug 2002 23:40:13 +0200
+
+towitoko (2.0.6-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fixed debconf translated files.
+  * Added russian debconf template file by 
+    Ilgiz Kalmetev <ilgiz@bashtelecom.ru>. Closes: bug#137675.
+
+ -- Carlos Prados <cprados@debian.org>  Sun, 17 Mar 2002 17:21:59 +0100
+
+towitoko (2.0.5-2) unstable; urgency=low
+
+  * Disabled ISO 7816-3 protocol T=0 mapping of APDU's into TPDU's.
+  * Baudrate for Synchronous cards set to 38400 bps. 
+
+ -- Carlos Prados <cprados@debian.org>  Sat, 15 Dec 2001 23:01:19 +0100
+
+towitoko (2.0.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added debconf option to select USB port.
+
+ -- Carlos Prados <cprados@debian.org>  Sat, 15 Dec 2001 14:14:14 +0100
+
+towitoko (2.0.4-5) unstable; urgency=low
+
+  * Modified libtowitoko2.postinst and libtowitoko2.postrm
+    to only restart pcscd if it was actually running. 
+
+ -- Carlos Prados <cprados@debian.org>  Sat, 27 Oct 2001 14:43:55 +0200
+
+towitoko (2.0.4-4) unstable; urgency=low
+
+  * Fixed libtowitoko2.prerm. 
+  * Fixed typo in french templates.
+  * Fixed translated templates keys.
+
+ -- Carlos Prados <cprados@debian.org>  Sun,  7 Oct 2001 01:22:09 +0200
+
+towitoko (2.0.4-3) unstable; urgency=low
+
+  * Added support for debconf configuration of /etc/reader.conf. 
+    Thanks Ludovic Rousseau. 
+  * Updated config.guess and config.sub. Closes: bug#111410.
+
+ -- Carlos Prados <cprados@debian.org>  Sun, 30 Sep 2001 13:21:05 +0200
+
+towitoko (2.0.4-2) unstable; urgency=low
+
+  * Added Build-Depends on debmake: Closes: bug#104635.
+  * Fixed a bug in ATR decoding routine. This will eventually go 
+    in towitoko-2.0.5.
+
+ -- Carlos Prados <cprados@debian.org>  Sun, 29 Jul 2001 11:23:19 +0200
+
+towitoko (2.0.4-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Carlos Prados <cprados@debian.org>  Sun,  1 Jul 2001 12:59:12 +0200
+
+towitoko (2.0.3-3) unstable; urgency=low
+
+  * Updated config.guess to revision 1.193 and config.sub to revision
+    1.209 from CVS at http://subversions.gnu.org/cgi-bin/cvsweb/config.
+    Closes: bug#97375.
+  * Removed undocumented.
+  * Added libtowitoko2.shlibs.
+  * Modified a bit description of libtowitoko2.
+
+ -- Carlos Prados <cprados@debian.org>  Tue, 15 May 2001 14:20:56 +0200
+
+towitoko (2.0.3-2) unstable; urgency=low
+
+  * Updated maintainer field
+  * Added suggests field to libtowitoko2
+
+ -- Carlos Prados <cprados@debian.org>  Sun, 15 Apr 2001 16:44:51 +0200
+
+towitoko (2.0.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Carlos Prados Bocos <cprados@yahoo.com>  Sun,  8 Apr 2001 23:08:58 +0200
+
+towitoko (2.0.2-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Carlos Prados Bocos <cprados@yahoo.com>  Wed,  4 Apr 2001 00:52:56 +0200
+
+Local variables:
+mode: debian-changelog
+End:

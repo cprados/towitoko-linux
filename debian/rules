@@ -1,0 +1,71 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+        CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+config.status:
+	dh_testdir
+	ln -sf /usr/share/misc/config.guess .
+	ln -sf /usr/share/misc/config.sub .
+	./configure --prefix=/usr \
+		--program-prefix=towitoko- \
+		--mandir=\$${prefix}/share/man \
+		--infodir=\$${prefix}/share/info \
+		--enable-static 
+
+build: config.status
+	dh_testdir
+	$(MAKE) "CFLAGS=-O2"
+
+clean:
+	dh_testdir
+	dh_testroot
+	[ ! -f Makefile ] || $(MAKE) distclean
+	$(RM) config.guess config.sub
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	$(MAKE) install DESTDIR=`pwd`/debian/tmp
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_install
+	dh_installdebconf	
+	dh_installdocs
+	dh_installexamples
+#	dh_installmenu
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installinit
+#	dh_installcron
+	dh_installman 
+#	dh_installinfo
+#	dh_undocumented
+	dh_installchangelogs ChangeLog
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs -V
+	dh_installdeb
+#	dh_perl
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

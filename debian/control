@@ -1,0 +1,30 @@
+Source: towitoko
+Section: misc
+Priority: extra
+Maintainer: Simon Richter <sjr@debian.org>
+Build-Depends: debhelper (>= 7), autotools-dev
+Standards-Version: 3.8.2
+
+Package: libtowitoko-dev
+Section: libdevel
+Priority: extra
+Architecture: any
+Depends: libtowitoko2 (= ${binary:Version}), libc6-dev, ${misc:Depends}
+Description: Towitoko smartcard reader CT-API development files
+ This package contains the files needed for compiling and linking
+ an application that communicates to the Towitoko smartcard
+ reader through the CT-API interface
+
+Package: libtowitoko2
+Section: libs
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}, debconf | debconf-2.0, ${misc:Depends}
+Suggests: libpcsclite1, pcscd
+Provides: pcsc-ifd-handler
+Description: Towitoko smartcard reader PCSC and CT-API driver
+ This library provides CT-API and PCSC IFD handler implementation
+ for the Towitoko smartcard readers.
+ .
+ This package is needed to communicate with the Towitoko 
+ smartcard reader through the PCSC Lite resource manager.

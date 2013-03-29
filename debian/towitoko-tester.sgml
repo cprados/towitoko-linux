@@ -1,0 +1,106 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.1//EN">
+
+<refentry>
+
+<refentryinfo>
+        <address><email>cprados@debian.org</email></address>
+        <author>
+	<firstname>Carlos</firstname>
+	<surname>Prados</surname>
+	</author>
+        <copyright><year>2002</year><holder>Carlos Prados</holder></copyright>
+        <date>08-30-2002</date>
+</refentryinfo>
+
+<refmeta>
+	<refentrytitle>Towitoko Tester</refentrytitle>
+	<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv id="X1">
+	<refdescriptor>towitoko-tester</refdescriptor>
+	<refname>towitoko-tester</refname>
+        <refpurpose>
+	Towitoko driver CT-API interface tester tool
+	</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+	<cmdsynopsis>
+	<command>towitoko-tester</command>
+	</cmdsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1>
+        <title>DESCRIPTION</title>
+
+        <para>
+	towitoko-tester is a simple tool that allows executing some 
+	simple commands on a smartcard using a Towitoko smartcard reader.
+	It can be used to test that a smartcard can be properly recognized, 
+	and that it can be read and written.
+        </para>
+
+        <para>
+	The tool provides a text based menu interface. Commands that can be 
+	executed via the menu depends on the reader card insertion status 
+	and the type of card inserted. For memory cards it permits reading 
+	and writing data bytes, checking and changing the PIN. For processor 
+	cards it permits selecting, reading and updating binary card files.
+        </para>
+
+        <para>
+        Several readers on different ports can be used at a time. The text
+        menu allows opening, closing and changing current port. The smartcard 
+	can be inserted and removed from any initialized reader at any time. 
+	The tool will automatically detect when the card is inserted and 
+	removed, and will update the information shown in the menu. However 
+	you must refresh the menu to see any change reflected.
+        </para>
+
+	<para>
+	If you have installed pcscd package, and have configured your reader
+	to be used by pscsd, you'll need to stop the pcsc daemon before 
+	initializing the reader with towitoko-tester.
+	</para>
+
+</refsect1>
+
+<refsect1>
+
+        <title>SEE ALSO</title>
+
+	<para>ctapi (3) and ctbcs (3). pcscd (8)</para>
+
+</refsect1>
+
+<refsect1>
+
+        <title>AUTHOR</title>
+
+        <para>
+	This manual page was written by Carlos Prados 
+	<email>&lt;cprados@debian.org&gt;</email>.
+        </para>
+
+</refsect1>
+</refentry>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-default-dtd-file:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

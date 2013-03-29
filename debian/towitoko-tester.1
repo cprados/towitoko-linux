@@ -1,0 +1,98 @@
+.\" This -*- nroff -*- file has been generated from
+.\" DocBook SGML with docbook-to-man on Debian GNU/Linux.
+...\"
+...\"	transcript compatibility for postscript use.
+...\"
+...\"	synopsis:  .P! <file.ps>
+...\"
+.de P!
+\\&.
+.fl			\" force out current output buffer
+\\!%PB
+\\!/showpage{}def
+...\" the following is from Ken Flowers -- it prevents dictionary overflows
+\\!/tempdict 200 dict def tempdict begin
+.fl			\" prolog
+.sy cat \\$1\" bring in postscript file
+...\" the following line matches the tempdict above
+\\!end % tempdict %
+\\!PE
+\\!.
+.sp \\$2u	\" move below the image
+..
+.de pF
+.ie     \\*(f1 .ds f1 \\n(.f
+.el .ie \\*(f2 .ds f2 \\n(.f
+.el .ie \\*(f3 .ds f3 \\n(.f
+.el .ie \\*(f4 .ds f4 \\n(.f
+.el .tm ? font overflow
+.ft \\$1
+..
+.de fP
+.ie     !\\*(f4 \{\
+.	ft \\*(f4
+.	ds f4\"
+'	br \}
+.el .ie !\\*(f3 \{\
+.	ft \\*(f3
+.	ds f3\"
+'	br \}
+.el .ie !\\*(f2 \{\
+.	ft \\*(f2
+.	ds f2\"
+'	br \}
+.el .ie !\\*(f1 \{\
+.	ft \\*(f1
+.	ds f1\"
+'	br \}
+.el .tm ? font underflow
+..
+.ds f1\"
+.ds f2\"
+.ds f3\"
+.ds f4\"
+'\" t 
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n  
+.TH "Towitoko Tester" "1" 
+.SH "NAME" 
+\fBtowitoko-tester\fR  \(em 	Towitoko driver CT-API interface tester tool 
+ 
+.SH "SYNOPSIS" 
+.PP 
+\fBtowitoko-tester\fP 
+.SH "DESCRIPTION" 
+.PP 
+towitoko-tester is a simple tool that allows executing some  
+simple commands on a smartcard using a Towitoko smartcard reader. 
+It can be used to test that a smartcard can be properly recognized,  
+and that it can be read and written. 
+ 
+.PP 
+The tool provides a text based menu interface. Commands that can be  
+executed via the menu depends on the reader card insertion status  
+and the type of card inserted. For memory cards it permits reading  
+and writing data bytes, checking and changing the PIN. For processor  
+cards it permits selecting, reading and updating binary card files. 
+ 
+.PP 
+Several readers on different ports can be used at a time. The text 
+menu allows opening, closing and changing current port. The smartcard  
+can be inserted and removed from any initialized reader at any time.  
+The tool will automatically detect when the card is inserted and  
+removed, and will update the information shown in the menu. However  
+you must refresh the menu to see any change reflected. 
+ 
+.PP 
+If you have installed pcscd package, and have configured your reader 
+to be used by pscsd, you'll need to stop the pcsc daemon before  
+initializing the reader with towitoko-tester. 
+ 
+.SH "SEE ALSO" 
+.PP 
+ctapi (3) and ctbcs (3). pcscd (8) 
+.SH "AUTHOR" 
+.PP 
+This manual page was written by Carlos Prados  
+<cprados@debian.org>. 
+ 
+...\" created by instant / docbook-to-man, Sat 31 Aug 2002, 00:33 
