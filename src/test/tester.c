@@ -738,7 +738,7 @@ SelectFile (unsigned short ctn)
   select_file[0] = ct_list[ctn].cla;
 
   printf ("File ID: ");
-  scanf ("%X %X", (unsigned int *) buffer, (unsigned int *) buffer + 1);
+  scanf ("%X %X", (unsigned int *) buffer, (unsigned int *) (buffer + 1));
   dummy = getchar ();
 
   select_file[5] = buffer[0];
@@ -926,7 +926,7 @@ SendPPS (unsigned short ctn)
   char ret;
 
   printf ("PPS request (PPSS PPS0 PPS1): ");
-  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) buffer + 1, (unsigned int *) buffer + 2);
+  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) (buffer + 1), (unsigned int *) (buffer + 2));
   dummy = getchar ();
 
   reset[5] = buffer[0];
@@ -965,7 +965,7 @@ EnterPin (unsigned short ctn)
   char ret;
 
   printf ("PIN (3 bytes): ");
-  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) buffer + 1, (unsigned int *) buffer + 2);
+  scanf ("%X %X %X", (unsigned int *) buffer,  (unsigned int *) (buffer + 1), (unsigned int *) (buffer + 2));
   dummy = getchar ();
 
   verify[5] = buffer[0];
@@ -1005,7 +1005,7 @@ ChangePin (unsigned short ctn)
   char ret;
 
   printf ("PIN (3 bytes): ");
-  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) buffer + 1, (unsigned int *) buffer + 2);
+  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) (buffer + 1), (unsigned int *) (buffer + 2));
   dummy = getchar ();
 
   change[5] = buffer[0];
@@ -1013,7 +1013,7 @@ ChangePin (unsigned short ctn)
   change[7] = buffer[2];
 
   printf ("New PIN (3 bytes): ");
-  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) buffer + 1, (unsigned int *) buffer + 2);
+  scanf ("%X %X %X", (unsigned int *) buffer, (unsigned int *) (buffer + 1), (unsigned int *) (buffer + 2));
   dummy = getchar ();
 
   change[8] = buffer[0];

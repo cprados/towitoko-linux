@@ -37,9 +37,9 @@ endif
 
 install-data-hook:
 	(cd $(DESTDIR)$(man3dir) && \
-	test -f CT_init.3  || $(LN_S) ctapi.3 CT_init.3 && \
-	test -f CT_data.3  || $(LN_S) ctapi.3 CT_data.3 && \
-	test -f CT_close.3 || $(LN_S) ctapi.3 CT_close.3)
+	test -f CT_init.3  || $(LN_S) $(shell echo ctapi | sed '$(transform)').3 CT_init.3 && \
+	test -f CT_data.3  || $(LN_S) $(shell echo ctapi | sed '$(transform)').3 CT_data.3 && \
+	test -f CT_close.3 || $(LN_S) $(shell echo ctapi | sed '$(transform)').3 CT_close.3)
 if INSTALL_USB_BUNDLE
 	install -D -m 644 Info.plist "@PCSC_LITE_DIR@/drivers/towitoko.bundle/Contents/Info.plist"
 endif

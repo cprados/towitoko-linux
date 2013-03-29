@@ -34,7 +34,7 @@
 #define ATR_OK		0	/* ATR could be parsed and data returned */
 #define ATR_NOT_FOUND	1	/* Data not present in ATR */
 #define ATR_MALFORMED	2	/* ATR could not be parsed */
-#define ATR_IO_ERROR	2	/* I/O stream error */
+#define ATR_IO_ERROR	3	/* I/O stream error */
 
 /* Paramenters */
 #define ATR_MAX_SIZE 		33	/* Maximum size of ATR byte array */

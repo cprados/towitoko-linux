@@ -77,10 +77,10 @@ Special `configure` options:
 
 --with-pcsc-lite-dir
   PCSC Lite base directory (default=/usr/local/pcsc). USB bundle is
-  installed under $pcsc_lite_dir/drivers if USB support is enabled.
+  installed under $pcsc_lite_dir/drivers if USB bundle support is enabled.
 
---enable-usb
-  enable USB support (default=no).
+--enable-usb-bundle
+  enable USB bundle installation (default=no).
 
 --enable-devfs
   enable Linux 2.4.X devfs support (default=no).
@@ -111,10 +111,3 @@ To configure a serial reader in PCSC Lite, copy the provided file
 doc/reader.conf to /etc/reader.conf and modify it to match your serial
 port settings. No configuration is needed for USB readers.
 
-TODO:
-=====
-
-* Update to CT-BCS 1.0.
-* Test inverse convention. Success has been reported with some inverse 
-  convetion cards, while faliures have been reported with others.
-* Test Chipdrive Twin and Kartenzwerg.

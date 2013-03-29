@@ -1,3 +1,13 @@
+2013-03-29  Carlos Prados  <cprados@yahoo.com>
+
+	* Released 2.0.8
+	* Merged fixes to upstream software comming from debian package 
+	  version 2.0.7-8.3.
+	* Corrected timeout value in atr reading that was set too low for
+	  certain cards (and particularly for Spanish DNIe national identity
+	  card).
+	* Cleaned README file.
+
 2002-08-18  Carlos Prados  <cprados@yahoo.com>
 
 	* Released 2.0.7
