@@ -1,5 +1,6 @@
 Template: libtowitoko2/port
 Type: select
+Default: ttyS0
 _Choices: ttyS0, ttyS1, ttyS2, ttyS3, ttyUSB0, ttyUSB1, ttyUSB2, ttyUSB3
 _Description: On which serial port is connected the smart card reader?
  PCSC needs to know on which serial port the reader is connected. This

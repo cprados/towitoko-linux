@@ -3,8 +3,9 @@ towitoko (2.0.8-1) unstable; urgency=low
   * Non-maintainer upload.
   * New upstream release.
   * Fix issues related to usb bundle installation (Closes: #603130, #168674).
+  * Fix removal of /etc/reader.conf.d after package uninstall (Closes: #331110).
 
- -- Carlos Prados Bocos <cprados@yahoo.com>  Fry, 29 Mar 2013 23::56 +0200
+ -- Carlos Prados Bocos <cprados@yahoo.com>  Sat, 30 Mar 2013 22:18:02 +0100
 
 towitoko (2.0.7-8.3) unstable; urgency=low
 

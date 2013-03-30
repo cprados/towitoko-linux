@@ -20,6 +20,19 @@ case "$1" in
       /usr/sbin/update-reader.conf || true
     fi
 
+    # remove /usr/lib/pcsc if there aren't any other drivers
+    if [ ! "$(ls -A /usr/lib/pcsc/drivers/)" ]; then 
+	rm -rf /usr/lib/pcsc/drivers
+    	if [ ! "$(ls -A /usr/lib/pcsc/)" ]; then 
+		rm -rf /usr/lib/pcsc
+	fi
+    fi
+
+    # remove /etc/reader.conf.d if it is empty
+    if [ ! "$(ls -A /etc/reader.conf.d/)" ]; then 
+	rm -rf /etc/reader.conf.d
+    fi
+
     # restart pcscd (PCSC daemon) if the package is installed
     # and if pcscd is running
     if [ -x /etc/init.d/pcscd ]; then

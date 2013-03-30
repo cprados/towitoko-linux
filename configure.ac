@@ -6,7 +6,7 @@ dnl Copyright (c) 2000 Carlos Prados <cprados@yahoo.com>
 
 AC_INIT
 
-AM_INIT_AUTOMAKE(towitoko,2.0.7)
+AM_INIT_AUTOMAKE(towitoko,2.0.8)
 
 AM_CONFIG_HEADER(config.h)
 

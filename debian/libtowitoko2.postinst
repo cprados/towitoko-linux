@@ -21,52 +21,52 @@ if [ "$1" = "configure" ]; then
   db_get 'libtowitoko2/port' || true
   SERIAL_PORT="$RET"
 
-  if [ "$RET" != "USB" ]; then
-
-    # First make sure the cfgdir exists
-    if [ ! -d $cfgdir ]; then
-      mkdir -p $cfgdir
-    fi
-
-    echo "FRIENDLYNAME      \"Towitoko Chipdrive Reader\"" > $cfg
-    echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
-    echo "LIBPATH           $lib" >> $cfg
-
-    case "$SERIAL_PORT" in
-      ttyS0)
-        echo "CHANNELID         0x0103F8" >> $cfg
-        ;;
-      ttyS1)
-        echo "CHANNELID         0x0102F8" >> $cfg
-        ;;
-      ttyS2)
-        echo "CHANNELID         0x0103E8" >> $cfg
-        ;;
-      ttyS3)
-        echo "CHANNELID         0x0102E8" >> $cfg
-        ;;
-      ttyUSB0)
-        echo "CHANNELID         0x200000" >> $cfg
-        ;;
-      ttyUSB1)
-        echo "CHANNELID         0x200001" >> $cfg
-        ;;
-      ttyUSB2)
-        echo "CHANNELID         0x200002" >> $cfg
-        ;;
-      ttyUSB3)
-        echo "CHANNELID         0x200003" >> $cfg
-        ;;
-      *)
-        echo "Error: serial port unknown ($SERIAL_PORT)"
-        ;;
-    esac
-
-    # regenerate /etc/reader.conf if update-reader.conf is available
-    if [ -x /usr/sbin/update-reader.conf ]; then
-      /usr/sbin/update-reader.conf || true
-    fi
+  # First make sure the cfgdir exists
+  if [ ! -d $cfgdir ]; then
+    mkdir -p $cfgdir
   fi
+
+  echo "FRIENDLYNAME      \"Towitoko Chipdrive Reader\"" > $cfg
+  echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
+  echo "LIBPATH           $lib" >> $cfg
+
+  case "$SERIAL_PORT" in
+    ttyS0)
+      echo "CHANNELID         0x0103F8" >> $cfg
+      ;;
+    ttyS1)
+      echo "CHANNELID         0x0102F8" >> $cfg
+      ;;
+    ttyS2)
+      echo "CHANNELID         0x0103E8" >> $cfg
+      ;;
+    ttyS3)
+      echo "CHANNELID         0x0102E8" >> $cfg
+      ;;
+    ttyUSB0)
+      echo "CHANNELID         0x200000" >> $cfg
+      ;;
+    ttyUSB1)
+      echo "CHANNELID         0x200001" >> $cfg
+      ;;
+    ttyUSB2)
+      echo "CHANNELID         0x200002" >> $cfg
+      ;;
+    ttyUSB3)
+      echo "CHANNELID         0x200003" >> $cfg
+      ;;
+    *)
+      echo "Error: serial port unknown ($SERIAL_PORT)"
+      ;;
+  esac
+
+  # regenerate /etc/reader.conf if update-reader.conf is available
+  if [ -x /usr/sbin/update-reader.conf ]; then
+    /usr/sbin/update-reader.conf || true
+  fi
+
+  # ensure that /usr/lib/pcsc/drivers directory exists otherwise pcscd will exit
+  mkdir -p $pcsclite_dir/drivers
 
   db_stop
 
