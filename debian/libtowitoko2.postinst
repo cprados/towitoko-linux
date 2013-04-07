@@ -26,22 +26,42 @@ if [ "$1" = "configure" ]; then
     mkdir -p $cfgdir
   fi
 
-  echo "FRIENDLYNAME      \"Towitoko Chipdrive Reader\"" > $cfg
-  echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
-  echo "LIBPATH           $lib" >> $cfg
+  echo "# Towitoko chipdrive reader with serial communication" > $cfg
+  echo "# This file has been generated. Do not change it manually." >> $cfg
+  echo "# Instead run dpkg-reconfigure libtowitoko2." >> $cfg
+  echo "# For serial towitoko readers, DEVICENAME is the serial port /dev/ttySn:" >> $cfg
+  echo "# where n is in [0..3]. For usb port readers DEVICENAME must not be set." >> $cfg
+  echo "# CHANNELID must be: " >> $cfg
+  echo "#   - 0x0103F8: COM1 (/dev/ttyS0)" >> $cfg
+  echo "#   - 0x0102F8: COM2 (/dev/ttyS1)" >> $cfg
+  echo "#   - 0x0103E8: COM3 (/dev/ttyS3)" >> $cfg
+  echo "#   - 0x0102E8: COM4 (/dev/ttyS4)" >> $cfg
+  echo "#   - 0x200000: First USB-serial device (/dev/ttyUSB0)" >> $cfg
+  echo "#   - 0x200001: Second USB-serial device (/dev/ttyUSB1)" >> $cfg
+  echo "#   - 0x200002: Third USB-serial device (/dev/ttyUSB3)" >> $cfg
+  echo "#   - 0x200003: Fourth USB-serial device (/dev/ttyUSB4)" >> $cfg
+
+  echo "FRIENDLYNAME      \"Towitoko Chipdrive Reader\"" >> $cfg
 
   case "$SERIAL_PORT" in
     ttyS0)
+      echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
       echo "CHANNELID         0x0103F8" >> $cfg
       ;;
     ttyS1)
+      echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
       echo "CHANNELID         0x0102F8" >> $cfg
       ;;
     ttyS2)
+      echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
       echo "CHANNELID         0x0103E8" >> $cfg
       ;;
     ttyS3)
+      echo "DEVICENAME        /dev/$SERIAL_PORT" >> $cfg
       echo "CHANNELID         0x0102E8" >> $cfg
+      ;;
+    USB)
+      echo "CHANNELID         0x200000" >> $cfg
       ;;
     ttyUSB0)
       echo "CHANNELID         0x200000" >> $cfg
@@ -59,6 +79,8 @@ if [ "$1" = "configure" ]; then
       echo "Error: serial port unknown ($SERIAL_PORT)"
       ;;
   esac
+
+  echo "LIBPATH           $lib" >> $cfg
 
   # regenerate /etc/reader.conf if update-reader.conf is available
   if [ -x /usr/sbin/update-reader.conf ]; then

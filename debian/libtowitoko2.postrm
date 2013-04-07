@@ -12,6 +12,10 @@
 
 set -e 
 
+cfgdir=/etc/reader.conf.d
+pcsclite_dir=/usr/lib/pcsc
+drivers_dir=$pcsclite_dir/drivers
+
 case "$1" in
   remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 
@@ -21,16 +25,16 @@ case "$1" in
     fi
 
     # remove /usr/lib/pcsc if there aren't any other drivers
-    if [ ! "$(ls -A /usr/lib/pcsc/drivers/)" ]; then 
-	rm -rf /usr/lib/pcsc/drivers
-    	if [ ! "$(ls -A /usr/lib/pcsc/)" ]; then 
-		rm -rf /usr/lib/pcsc
+    if [ -d $drivers_dir -a ! "$(ls -A $drivers_dir 2>/dev/null)" ]; then
+	rm -rf $drivers_dir
+        if [ -d $pcsclite_dir -a ! "$(ls -A $pcsclite_dir 2>/dev/null)" ]; then
+		rm -rf $pcsclite_dir
 	fi
     fi
 
     # remove /etc/reader.conf.d if it is empty
-    if [ ! "$(ls -A /etc/reader.conf.d/)" ]; then 
-	rm -rf /etc/reader.conf.d
+    if [ -d $cfgdir -a ! "$(ls -A $cfgdir 2>/dev/null)" ]; then
+	rm -rf $cfgdir
     fi
 
     # restart pcscd (PCSC daemon) if the package is installed
