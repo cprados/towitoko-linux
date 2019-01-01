@@ -596,7 +596,12 @@ IO_Serial_Write (IO_Serial * io, unsigned delay, unsigned size, BYTE * data)
 
   for (count = 0; count < size; count += to_send)
     {
+
+#ifdef DEBUG_SEND_ONE
       to_send = (delay? 1: size);
+#else
+      to_send = size;
+#endif
 
       if (IO_Serial_WaitToWrite (io->fd, delay, 1000))
 	{

@@ -34,7 +34,7 @@
  */
 
 #define IFD_TOWITOKO_TIMEOUT             1000
-#define IFD_TOWITOKO_DELAY               0
+#define IFD_TOWITOKO_DELAY               1
 #define IFD_TOWITOKO_BAUDRATE            9600
 #define IFD_TOWITOKO_PS                  15
 #define IFD_TOWITOKO_MAX_TRANSMIT        255
